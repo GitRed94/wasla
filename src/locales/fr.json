@@ -1,0 +1,43 @@
+{
+  "app_name": "Wasla",
+  "nav": {
+    "home": "Accueil",
+    "search": "Rechercher",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "logout": "Déconnexion",
+    "dashboard": "Tableau de bord",
+    "my_profile": "Mon profil",
+    "messages": "Messages"
+  },
+  "auth": {
+    "email": "Email",
+    "phone": "Téléphone",
+    "password": "Mot de passe",
+    "login_title": "Connexion",
+    "register_title": "Créer un compte",
+    "or": "ou",
+    "submit_login": "Se connecter",
+    "submit_register": "S'inscrire",
+    "choose_role": "Vous êtes...",
+    "role_client": "Client — je cherche un prestataire",
+    "role_prestataire": "Prestataire — je propose mes services",
+    "already_account": "Déjà un compte ?",
+    "no_account": "Pas encore de compte ?",
+    "otp_sent": "Code envoyé par SMS",
+    "enter_otp": "Entrez le code reçu",
+    "verify": "Vérifier"
+  },
+  "errors": {
+    "required": "Ce champ est requis",
+    "invalid_email": "Email invalide",
+    "invalid_phone": "Numéro invalide (ex: +213612345678)",
+    "auth_failed": "Échec de la connexion. Vérifiez vos informations.",
+    "generic": "Une erreur est survenue"
+  },
+  "home": {
+    "hero_title": "Trouvez le bon prestataire près de chez vous",
+    "hero_subtitle": "Plombiers, électriciens, peintres et plus — vérifiés et disponibles.",
+    "search_placeholder": "Quelle prestation recherchez-vous ?"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "app_name": "وصلة",
+  "nav": {
+    "home": "الرئيسية",
+    "search": "بحث",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "logout": "خروج",
+    "dashboard": "لوحة التحكم",
+    "my_profile": "ملفي",
+    "messages": "الرسائل"
+  },
+  "auth": {
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "password": "كلمة المرور",
+    "login_title": "تسجيل الدخول",
+    "register_title": "إنشاء حساب",
+    "or": "أو",
+    "submit_login": "دخول",
+    "submit_register": "إنشاء الحساب",
+    "choose_role": "أنت...",
+    "role_client": "عميل — أبحث عن مزود خدمة",
+    "role_prestataire": "مزود خدمة — أقدم خدماتي",
+    "already_account": "لديك حساب؟",
+    "no_account": "ليس لديك حساب؟",
+    "otp_sent": "تم إرسال الرمز عبر SMS",
+    "enter_otp": "أدخل الرمز المستلم",
+    "verify": "تحقق"
+  },
+  "errors": {
+    "required": "هذا الحقل مطلوب",
+    "invalid_email": "بريد إلكتروني غير صالح",
+    "invalid_phone": "رقم غير صالح (مثال: +213612345678)",
+    "auth_failed": "فشل تسجيل الدخول. تحقق من معلوماتك.",
+    "generic": "حدث خطأ ما"
+  },
+  "home": {
+    "hero_title": "اعثر على مزود الخدمة المناسب بالقرب منك",
+    "hero_subtitle": "سبّاكون، كهربائيون، دهّانون والمزيد — موثّقون ومتاحون.",
+    "search_placeholder": "ما الخدمة التي تبحث عنها؟"
+  }
+}

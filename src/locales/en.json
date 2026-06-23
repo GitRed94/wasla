@@ -1,0 +1,43 @@
+{
+  "app_name": "Wasla",
+  "nav": {
+    "home": "Home",
+    "search": "Search",
+    "login": "Login",
+    "register": "Sign up",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "my_profile": "My Profile",
+    "messages": "Messages"
+  },
+  "auth": {
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "login_title": "Login",
+    "register_title": "Create an account",
+    "or": "or",
+    "submit_login": "Login",
+    "submit_register": "Sign up",
+    "choose_role": "I am a...",
+    "role_client": "Client — looking for a professional",
+    "role_prestataire": "Professional — offering my services",
+    "already_account": "Already have an account?",
+    "no_account": "No account yet?",
+    "otp_sent": "Code sent by SMS",
+    "enter_otp": "Enter the code you received",
+    "verify": "Verify"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalid_email": "Invalid email",
+    "invalid_phone": "Invalid number (e.g. +213612345678)",
+    "auth_failed": "Login failed. Check your credentials.",
+    "generic": "Something went wrong"
+  },
+  "home": {
+    "hero_title": "Find the right professional near you",
+    "hero_subtitle": "Plumbers, electricians, painters and more — verified and available.",
+    "search_placeholder": "What service are you looking for?"
+  }
+}
