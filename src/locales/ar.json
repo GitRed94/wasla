@@ -40,5 +40,38 @@
     "hero_title": "اعثر على مزود الخدمة المناسب بالقرب منك",
     "hero_subtitle": "سبّاكون، كهربائيون، دهّانون والمزيد — موثّقون ومتاحون.",
     "search_placeholder": "ما الخدمة التي تبحث عنها؟"
+  },
+  "categories": {
+    "plombier": "سبّاك",
+    "electricien": "كهربائي",
+    "climaticien": "تقني تكييف",
+    "frigoriste": "تقني تبريد",
+    "peintre": "دهّان",
+    "menuisier": "نجّار",
+    "informaticien": "تقني إعلام آلي"
+  },
+  "search": {
+    "filter_category": "الفئة",
+    "filter_wilaya": "الولاية",
+    "all_categories": "جميع الفئات",
+    "all_wilayas": "جميع الولايات",
+    "no_results": "لم يُعثر على مزود خدمة في هذه المنطقة.",
+    "results_count": "{{count}} مزود خدمة",
+    "submit": "بحث"
+  },
+  "profile": {
+    "contact_btn": "تواصل",
+    "no_portfolio": "لا توجد صور بعد.",
+    "no_reviews": "لا توجد تقييمات بعد.",
+    "badge_unverified": "غير موثّق",
+    "badge_verified": "موثّق ✓",
+    "badge_trusted": "موثوق ⭐",
+    "years_exp": "{{count}} سنة خبرة"
+  },
+  "contact": {
+    "placeholder": "صف حاجتك في بضع كلمات...",
+    "send": "إرسال",
+    "success": "تم إرسال الرسالة!",
+    "login_required": "سجّل دخولك للتواصل مع هذا المزود"
   }
 }

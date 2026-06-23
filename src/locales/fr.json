@@ -40,5 +40,38 @@
     "hero_title": "Trouvez le bon prestataire près de chez vous",
     "hero_subtitle": "Plombiers, électriciens, peintres et plus — vérifiés et disponibles.",
     "search_placeholder": "Quelle prestation recherchez-vous ?"
+  },
+  "categories": {
+    "plombier": "Plombier",
+    "electricien": "Électricien",
+    "climaticien": "Climaticien",
+    "frigoriste": "Frigoriste",
+    "peintre": "Peintre",
+    "menuisier": "Menuisier",
+    "informaticien": "Informaticien"
+  },
+  "search": {
+    "filter_category": "Catégorie",
+    "filter_wilaya": "Wilaya",
+    "all_categories": "Toutes les catégories",
+    "all_wilayas": "Toutes les wilayas",
+    "no_results": "Aucun prestataire trouvé dans cette zone.",
+    "results_count": "{{count}} prestataire(s) trouvé(s)",
+    "submit": "Rechercher"
+  },
+  "profile": {
+    "contact_btn": "Contacter",
+    "no_portfolio": "Aucune photo de portfolio pour le moment.",
+    "no_reviews": "Aucun avis pour le moment.",
+    "badge_unverified": "Non vérifié",
+    "badge_verified": "Vérifié ✓",
+    "badge_trusted": "Fiable ⭐",
+    "years_exp": "{{count}} an(s) d'expérience"
+  },
+  "contact": {
+    "placeholder": "Décrivez votre besoin en quelques mots...",
+    "send": "Envoyer",
+    "success": "Message envoyé !",
+    "login_required": "Connectez-vous pour contacter ce prestataire"
   }
 }

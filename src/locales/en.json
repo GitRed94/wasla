@@ -40,5 +40,38 @@
     "hero_title": "Find the right professional near you",
     "hero_subtitle": "Plumbers, electricians, painters and more — verified and available.",
     "search_placeholder": "What service are you looking for?"
+  },
+  "categories": {
+    "plombier": "Plumber",
+    "electricien": "Electrician",
+    "climaticien": "HVAC Technician",
+    "frigoriste": "Refrigeration Tech",
+    "peintre": "Painter",
+    "menuisier": "Carpenter",
+    "informaticien": "IT Technician"
+  },
+  "search": {
+    "filter_category": "Category",
+    "filter_wilaya": "Wilaya",
+    "all_categories": "All categories",
+    "all_wilayas": "All wilayas",
+    "no_results": "No professionals found in this area.",
+    "results_count": "{{count}} professional(s) found",
+    "submit": "Search"
+  },
+  "profile": {
+    "contact_btn": "Contact",
+    "no_portfolio": "No portfolio photos yet.",
+    "no_reviews": "No reviews yet.",
+    "badge_unverified": "Unverified",
+    "badge_verified": "Verified ✓",
+    "badge_trusted": "Trusted ⭐",
+    "years_exp": "{{count}} year(s) experience"
+  },
+  "contact": {
+    "placeholder": "Describe your need in a few words...",
+    "send": "Send",
+    "success": "Message sent!",
+    "login_required": "Log in to contact this professional"
   }
 }
