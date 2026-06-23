@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
+const PHONE_REGEX = /^\+\d{7,15}$/
+
 export default function Register() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -25,6 +27,7 @@ export default function Register() {
   async function handleEmailRegister(e) {
     e.preventDefault()
     if (!role) { setError(t('errors.required')); return }
+    if (password.length < 8) { setError(t('errors.password_too_short')); return }
     setError('')
     setLoading(true)
     const { error } = await supabase.auth.signUp({
@@ -40,6 +43,7 @@ export default function Register() {
   async function handleSendOtp(e) {
     e.preventDefault()
     if (!role) { setError(t('errors.required')); return }
+    if (!PHONE_REGEX.test(phone)) { setError(t('errors.invalid_phone')); return }
     setError('')
     setLoading(true)
     const { error } = await supabase.auth.signInWithOtp({
@@ -130,7 +134,7 @@ export default function Register() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={8}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>

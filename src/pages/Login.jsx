@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
+const PHONE_REGEX = /^\+\d{7,15}$/
+
 export default function Login() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -33,6 +35,7 @@ export default function Login() {
 
   async function handleSendOtp(e) {
     e.preventDefault()
+    if (!PHONE_REGEX.test(phone)) { setError(t('errors.invalid_phone')); return }
     setError('')
     setLoading(true)
     const { error } = await supabase.auth.signInWithOtp({ phone })

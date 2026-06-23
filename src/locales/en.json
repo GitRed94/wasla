@@ -32,6 +32,7 @@
     "required": "This field is required",
     "invalid_email": "Invalid email",
     "invalid_phone": "Invalid number (e.g. +213612345678)",
+    "password_too_short": "Password must be at least 8 characters",
     "auth_failed": "Login failed. Check your credentials.",
     "generic": "Something went wrong"
   },

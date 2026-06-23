@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import LanguageSwitcher from '../ui/LanguageSwitcher'
@@ -6,6 +6,12 @@ import LanguageSwitcher from '../ui/LanguageSwitcher'
 export default function Navbar() {
   const { t } = useTranslation()
   const { user, profile, signOut } = useAuth()
+  const navigate = useNavigate()
+
+  async function handleSignOut() {
+    await signOut()
+    navigate('/')
+  }
 
   return (
     <nav className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
@@ -27,7 +33,7 @@ export default function Navbar() {
               {profile?.role === 'prestataire' ? t('nav.dashboard') : t('nav.messages')}
             </Link>
             <button
-              onClick={signOut}
+              onClick={handleSignOut}
               className="text-sm text-gray-700 hover:text-red-600"
             >
               {t('nav.logout')}

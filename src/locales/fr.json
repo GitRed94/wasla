@@ -32,6 +32,7 @@
     "required": "Ce champ est requis",
     "invalid_email": "Email invalide",
     "invalid_phone": "Numéro invalide (ex: +213612345678)",
+    "password_too_short": "Le mot de passe doit contenir au moins 8 caractères",
     "auth_failed": "Échec de la connexion. Vérifiez vos informations.",
     "generic": "Une erreur est survenue"
   },
