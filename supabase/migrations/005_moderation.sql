@@ -15,6 +15,10 @@ create policy "Authenticated users can file reports"
   on public.reports for insert
   with check (auth.uid() = reporter_id);
 
+create policy "Reporters can view their own reports"
+  on public.reports for select
+  using (auth.uid() = reporter_id);
+
 create table public.user_warnings (
   id uuid default gen_random_uuid() primary key,
   user_id uuid references public.profiles(id) on delete cascade,

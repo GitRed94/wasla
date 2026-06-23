@@ -40,6 +40,14 @@ create policy "Anyone can view portfolio photos"
   on public.portfolio_photos for select
   using (true);
 
-create policy "Prestataires can manage their own photos"
-  on public.portfolio_photos for all
+create policy "Prestataires can view their own photos for management"
+  on public.portfolio_photos for select
+  using (auth.uid() = prestataire_id);
+
+create policy "Prestataires can insert their own photos"
+  on public.portfolio_photos for insert
+  with check (auth.uid() = prestataire_id);
+
+create policy "Prestataires can delete their own photos"
+  on public.portfolio_photos for delete
   using (auth.uid() = prestataire_id);
