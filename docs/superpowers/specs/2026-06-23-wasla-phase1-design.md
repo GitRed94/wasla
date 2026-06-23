@@ -335,3 +335,60 @@ To be expanded based on market demand.
 | Vercel | Red1's projects | ✓ Connected |
 
 > **Note:** Supabase RedProject is currently paused and will need to be restored before starting implementation.
+
+---
+
+## 12. Security Review — Findings & Fixes (Phase 1A)
+
+**When:** End of Phase 1A, before starting Plan 1B (Discovery).  
+**Tool used:** `superpowers:security-review` skill → produced a prioritised finding list. Then fixed via `superpowers:subagent-driven-development` (5 tasks, 5 migrations/frontend commits, reviewed by a task-reviewer agent after each task + a final whole-branch reviewer agent).  
+**Branch:** commits `02cbf6f` → `0e35c16` on main (5 commits, 11 tests passing).
+
+### What we found and fixed
+
+#### Critical — fixed
+
+| Finding | Root cause | Fix applied |
+|---------|-----------|------------|
+| Role assignment is client-controlled | `signUp()` sends `{ data: { role } }` from the browser; the trigger used `COALESCE` which accepted any string | Migration 006: trigger now uses `CASE … IN ('client', 'prestataire') ELSE 'client'` — rejects any other value |
+| Prestataire can self-promote badge to 'verified'/'trusted' | UPDATE policy had no `WITH CHECK` — only `USING` | Migration 006: added `WITH CHECK (badge = (select badge from prestataire_profiles where id = auth.uid()))` — badge can never change via client UPDATE |
+
+#### High — fixed
+
+| Finding | Root cause | Fix applied |
+|---------|-----------|------------|
+| No route guards on /dashboard and /mon-profil | Both routes were open `<Route>` elements with no auth check | Task 4: `ProtectedRoute` component (renders `null` while loading, `<Navigate to="/login" replace />` if unauthenticated, `<Outlet />` if authenticated). 3 tests. App.jsx wraps both routes. |
+| `prestataire_profiles` UPDATE policy missing role check | USING clause only checked `auth.uid() = id`, not that caller is a prestataire | Migration 006: USING now also requires `exists (select 1 from profiles where id = auth.uid() and role = 'prestataire')` |
+| `conversations` INSERT doesn't verify caller is a client or prestataire is visible | WITH CHECK only checked `auth.uid() = client_id` | Migration 007: added role = 'client' sub-select + `is_visible = true` check on prestataire |
+| `reviews` INSERT fake review risk — conversation exists but no messages required | Policy only checked a conversation existed between the parties | Migration 007: rewrote to JOIN on messages — at least one message must exist in the conversation |
+
+#### Medium — fixed
+
+| Finding | Root cause | Fix applied |
+|---------|-----------|------------|
+| `portfolio_photos` redundant SELECT policies + no role check on INSERT | Two overlapping SELECT policies; INSERT only checked `auth.uid() = prestataire_id` | Migration 008: removed redundant SELECT policy; INSERT now also requires `role = 'prestataire'` sub-select |
+| `reports` INSERT allows filing against arbitrary UUIDs | No check that reporter interacted with the reported user | Migration 008: reports INSERT now requires `conversation_id IS NULL OR exists (select 1 from conversations where id = conversation_id and (client_id = auth.uid() or prestataire_id = auth.uid()))` |
+| Password only HTML-validated (minLength=6) | `minLength` attribute on `<input>` can be bypassed via DevTools or direct API calls | Task 5: JS guard in `handleEmailRegister` — `if (password.length < 8)` — shows `errors.password_too_short` i18n error |
+| `signOut` no redirect after logout | `AuthContext.signOut()` called supabase but didn't navigate | Task 5: Navbar wraps `signOut` in `handleSignOut` → `await signOut()` then `navigate('/')` |
+| Phone number no format validation | Phone field was free-text, any value sent to Supabase OTP | Task 5: `PHONE_REGEX = /^\+\d{7,15}$/` validates E.164 format in both Login.jsx and Register.jsx before the OTP call |
+
+### What is still open (fix before 1B)
+
+| Finding | Severity | Details |
+|---------|----------|---------|
+| `reviews` INSERT missing explicit `role = 'client'` check | Important | The `c.client_id = auth.uid()` sub-select is a proxy for the client role but not identical. Should add `exists (select 1 from profiles where id = auth.uid() and role = 'client')` for consistency with the conversations policy. Low risk but inconsistent. |
+| `PHONE_REGEX` duplicated in Login.jsx + Register.jsx | Minor | Extract to `src/utils/validation.js` |
+| `portfolio_photos` DELETE policy has no role check | Minor | Only checks `auth.uid() = prestataire_id`, no `role = 'prestataire'` sub-select |
+| `ProtectedRoute` renders nothing during auth hydration | Minor | User sees blank page briefly — add a spinner |
+| `handleSignOut` in Navbar does not handle errors | Minor | If `signOut()` rejects, `navigate('/')` still fires |
+
+### Lessons for future apps — apply from day 1
+
+1. **Never trust client-sent role.** DB trigger must validate it with an explicit allowlist (`CASE … IN (…) ELSE 'default'`), not `COALESCE`.
+2. **Every UPDATE policy needs `WITH CHECK`.** `USING` controls which rows you can update; `WITH CHECK` controls what values you can write. Without it, users can overwrite badge/role/status fields.
+3. **Role sub-select on every write policy.** A user whose `auth.uid()` matches a row ID is not necessarily authorized to write it. Always add `exists (select 1 from profiles where id = auth.uid() and role = 'expected_role')`.
+4. **Protected routes from day 1.** Never leave authenticated pages as open `<Route>` elements. Wire `ProtectedRoute` at the same time you create the page.
+5. **signOut must redirect.** Always call `navigate()` after sign-out — leaving the user on a protected page after logout is both a UX and security issue.
+6. **JS validation, not just HTML attributes.** `minLength`, `required`, `type="email"` can be bypassed from browser DevTools. Add a JS guard before any API call for every constraint that matters (password length, phone format, role selection).
+7. **Scope write policies to interactions.** Reports, reviews, and messages should only be allowed between users who have actually interacted (joined a conversation). A bare `auth.uid() = reporter_id` is too permissive.
+8. **Run the `superpowers:security-review` skill immediately after Plan 1A** — before building any 1B features. Fixing security on a small codebase is cheap; fixing it after 20 more pages are built is expensive.
