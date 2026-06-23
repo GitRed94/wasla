@@ -3,6 +3,8 @@ import Navbar from './components/layout/Navbar'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import MonProfil from './pages/MonProfil'
+import Dashboard from './pages/Dashboard'
 
 export default function App() {
   return (
@@ -12,6 +14,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/mon-profil" element={<MonProfil />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </div>
   )

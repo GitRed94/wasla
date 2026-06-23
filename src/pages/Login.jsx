@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
@@ -17,7 +17,9 @@ export default function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  if (user) { navigate('/'); return null }
+  useEffect(() => {
+    if (user) navigate('/')
+  }, [user, navigate])
 
   async function handleEmailLogin(e) {
     e.preventDefault()

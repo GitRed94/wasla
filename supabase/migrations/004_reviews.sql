@@ -17,9 +17,13 @@ create policy "Anyone can view reviews"
   on public.reviews for select
   using (true);
 
-create policy "Clients can insert reviews for completed jobs"
+create policy "Clients can insert reviews after conversation"
   on public.reviews for insert
   with check (
-    auth.uid() = client_id and
-    job_marked_complete = true
+    auth.uid() = client_id
+    and exists (
+      select 1 from public.conversations c
+      where c.client_id = auth.uid()
+      and c.prestataire_id = reviews.prestataire_id
+    )
   );

@@ -23,4 +23,10 @@ i18n
     interpolation: { escapeValue: false },
   })
 
+i18n.on('initialized', () => {
+  const lang = i18n.language?.split('-')[0]
+  document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr')
+  document.documentElement.setAttribute('lang', lang || 'fr')
+})
+
 export default i18n

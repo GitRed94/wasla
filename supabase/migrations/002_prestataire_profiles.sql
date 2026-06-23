@@ -24,7 +24,13 @@ create policy "Prestataires can update their own profile"
 
 create policy "Prestataires can insert their own profile"
   on public.prestataire_profiles for insert
-  with check (auth.uid() = id);
+  with check (
+    auth.uid() = id
+    and exists (
+      select 1 from public.profiles
+      where id = auth.uid() and role = 'prestataire'
+    )
+  );
 
 create table public.portfolio_photos (
   id uuid default gen_random_uuid() primary key,

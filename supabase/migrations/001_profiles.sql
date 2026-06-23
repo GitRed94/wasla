@@ -17,7 +17,11 @@ create policy "Users can view their own profile"
 
 create policy "Users can update their own profile"
   on public.profiles for update
-  using (auth.uid() = id);
+  using (auth.uid() = id)
+  with check (
+    auth.uid() = id
+    and role = (select role from public.profiles where id = auth.uid())
+  );
 
 -- Allow public to read prestataire profiles (needed for browse)
 create policy "Public can view prestataire profiles"
