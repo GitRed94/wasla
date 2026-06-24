@@ -79,7 +79,7 @@ export default function MonProfil() {
     }
   }
 
-  if (fetching) return <div className="p-8 text-center text-gray-400">Chargement...</div>
+  if (fetching) return <div className="p-8 text-center text-gray-400">{t('profile_setup.loading')}</div>
 
   return (
     <main className="max-w-lg mx-auto px-4 py-8">
@@ -105,7 +105,7 @@ export default function MonProfil() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            {t('profile_setup.wilaya')} *
+            {t('profile_setup.wilaya')}
           </label>
           <SelectField
             value={wilaya}
@@ -190,7 +190,7 @@ export default function MonProfil() {
           disabled={loading}
           className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
         >
-          {loading ? '...' : t('profile_setup.save')}
+          {loading ? t('profile_setup.saving') : t('profile_setup.save')}
         </button>
       </form>
     </main>
