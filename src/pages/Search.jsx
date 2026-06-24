@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
 import { CATEGORIES } from '../data/categories'
 import { WILAYAS } from '../data/wilayas'
 import PrestaCard from '../components/ui/PrestaCard'
+import SelectField from '../components/ui/SelectField'
 
 export default function Search() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const category = searchParams.get('category') || ''
   const wilaya = searchParams.get('wilaya') || ''
@@ -15,6 +17,9 @@ export default function Search() {
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(true)
   const [fetchError, setFetchError] = useState(null)
+
+  const categoryOptions = CATEGORIES.map(cat => ({ value: cat.key, label: `${cat.emoji} ${t(`categories.${cat.key}`)}` }))
+  const wilayaOptions = WILAYAS.map(w => ({ value: w, label: w }))
 
   useEffect(() => {
     async function fetchResults() {
@@ -46,31 +51,29 @@ export default function Search() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-4"
+      >
+        ← Retour
+      </button>
+
       {/* Filter bar */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <select
+        <SelectField
           value={category}
-          onChange={e => handleFilter('category', e.target.value)}
-          className="w-full sm:flex-1 min-w-0 border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
-        >
-          <option value="">{t('search.all_categories')}</option>
-          {CATEGORIES.map(cat => (
-            <option key={cat.key} value={cat.key}>
-              {cat.emoji} {t(`categories.${cat.key}`)}
-            </option>
-          ))}
-        </select>
-
-        <select
+          onChange={v => handleFilter('category', v)}
+          placeholder={t('search.all_categories')}
+          options={categoryOptions}
+          className="w-full sm:flex-1"
+        />
+        <SelectField
           value={wilaya}
-          onChange={e => handleFilter('wilaya', e.target.value)}
-          className="w-full sm:flex-1 min-w-0 border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
-        >
-          <option value="">{t('search.all_wilayas')}</option>
-          {WILAYAS.map(w => (
-            <option key={w} value={w}>{w}</option>
-          ))}
-        </select>
+          onChange={v => handleFilter('wilaya', v)}
+          placeholder={t('search.all_wilayas')}
+          options={wilayaOptions}
+          className="w-full sm:flex-1"
+        />
       </div>
 
       {/* Error banner */}

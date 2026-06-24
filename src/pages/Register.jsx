@@ -6,6 +6,17 @@ import { useAuth } from '../context/AuthContext'
 
 const PHONE_REGEX = /^\+\d{7,15}$/
 
+const PASSWORD_RULES = [
+  { test: v => v.length >= 8,          label: '8 caractères minimum' },
+  { test: v => /[A-Z]/.test(v),        label: 'Une majuscule' },
+  { test: v => /[0-9]/.test(v),        label: 'Un chiffre' },
+  { test: v => /[^A-Za-z0-9]/.test(v), label: 'Un caractère spécial (!@#$%...)' },
+]
+
+function passwordValid(v) {
+  return PASSWORD_RULES.every(r => r.test(v))
+}
+
 export default function Register() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -25,10 +36,24 @@ export default function Register() {
     if (user) navigate('/')
   }, [user, navigate])
 
+  function classifyError(error) {
+    const msg = error.message?.toLowerCase() ?? ''
+    if (msg.includes('already registered') || msg.includes('already exists') || error.status === 422) {
+      return 'Cet email est déjà utilisé. Connectez-vous plutôt.'
+    }
+    if (error.status === 429 || msg.includes('rate limit') || msg.includes('security purposes')) {
+      return 'Trop de tentatives. Réessayez dans quelques minutes.'
+    }
+    return t('errors.auth_failed')
+  }
+
   async function handleEmailRegister(e) {
     e.preventDefault()
     if (!role) { setError(t('errors.required')); return }
-    if (password.length < 8) { setError(t('errors.password_too_short')); return }
+    if (!passwordValid(password)) {
+      setError('Le mot de passe ne respecte pas tous les critères de sécurité.')
+      return
+    }
     setError('')
     setSuccess('')
     setLoading(true)
@@ -39,12 +64,7 @@ export default function Register() {
         options: { data: { role } },
       })
       if (error) {
-        const msg = error.message?.toLowerCase() ?? ''
-        if (msg.includes('already registered') || msg.includes('already exists') || error.status === 422) {
-          setError('Cet email est déjà utilisé. Connectez-vous plutôt.')
-        } else {
-          setError(t('errors.auth_failed'))
-        }
+        setError(classifyError(error))
       } else if (data.user && !data.session) {
         setSuccess('Inscription réussie ! Vérifiez votre email pour activer votre compte, puis connectez-vous.')
       } else {
@@ -69,7 +89,7 @@ export default function Register() {
         phone,
         options: { data: { role } },
       })
-      if (error) setError(t('errors.auth_failed'))
+      if (error) setError(classifyError(error))
       else setOtpSent(true)
     } catch {
       setError(t('errors.generic'))
@@ -84,7 +104,7 @@ export default function Register() {
     setLoading(true)
     try {
       const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' })
-      if (error) setError(t('errors.auth_failed'))
+      if (error) setError(classifyError(error))
       else navigate(role === 'prestataire' ? '/mon-profil' : '/')
     } catch {
       setError(t('errors.generic'))
@@ -163,16 +183,29 @@ export default function Register() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                minLength={8}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              <div className="mt-2 space-y-1">
+                {PASSWORD_RULES.map(rule => {
+                  const met = rule.test(password)
+                  return (
+                    <div
+                      key={rule.label}
+                      className={`flex items-center gap-1.5 text-xs ${met ? 'text-green-600' : password.length > 0 ? 'text-red-400' : 'text-gray-400'}`}
+                    >
+                      <span>{met ? '✓' : '•'}</span>
+                      <span>{rule.label}</span>
+                    </div>
+                  )
+                })}
+              </div>
             </div>
             <button
               type="submit"
               disabled={loading}
               className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
             >
-              {t('auth.submit_register')}
+              {loading ? 'Inscription en cours...' : t('auth.submit_register')}
             </button>
           </form>
         )}
@@ -198,7 +231,7 @@ export default function Register() {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
             >
-              {t('auth.submit_register')}
+              {loading ? 'Envoi en cours...' : t('auth.submit_register')}
             </button>
           </form>
         )}

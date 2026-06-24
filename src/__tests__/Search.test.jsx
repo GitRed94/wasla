@@ -34,10 +34,10 @@ function Wrapper({ children, url = '/search' }) {
 
 beforeEach(() => i18n.changeLanguage('fr'))
 
-test('renders filter bar with category and wilaya selects', () => {
+test('renders filter bar with category and wilaya dropdowns', () => {
   render(<Search />, { wrapper: (p) => <Wrapper {...p} /> })
-  expect(screen.getByDisplayValue(/toutes les catégories/i)).toBeInTheDocument()
-  expect(screen.getByDisplayValue(/toutes les wilayas/i)).toBeInTheDocument()
+  expect(screen.getByText(/toutes les catégories/i)).toBeInTheDocument()
+  expect(screen.getByText(/toutes les wilayas/i)).toBeInTheDocument()
 })
 
 test('renders prestataire cards after loading', async () => {

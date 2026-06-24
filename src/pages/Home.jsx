@@ -3,12 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CATEGORIES } from '../data/categories'
 import { WILAYAS } from '../data/wilayas'
+import SelectField from '../components/ui/SelectField'
 
 export default function Home() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [category, setCategory] = useState('')
   const [wilaya, setWilaya] = useState('')
+
+  const categoryOptions = CATEGORIES.map(cat => ({ value: cat.key, label: `${cat.emoji} ${t(`categories.${cat.key}`)}` }))
+  const wilayaOptions = WILAYAS.map(w => ({ value: w, label: w }))
 
   function handleSearch(e) {
     e.preventDefault()
@@ -35,30 +39,20 @@ export default function Home() {
           onSubmit={handleSearch}
           className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto"
         >
-          <select
+          <SelectField
             value={category}
-            onChange={e => setCategory(e.target.value)}
-            className="w-full sm:flex-1 min-w-0 px-4 py-2.5 rounded-lg text-gray-800 text-sm bg-white"
-          >
-            <option value="">{t('search.all_categories')}</option>
-            {CATEGORIES.map(cat => (
-              <option key={cat.key} value={cat.key}>
-                {cat.emoji} {t(`categories.${cat.key}`)}
-              </option>
-            ))}
-          </select>
-
-          <select
+            onChange={setCategory}
+            placeholder={t('search.all_categories')}
+            options={categoryOptions}
+            className="w-full sm:flex-1"
+          />
+          <SelectField
             value={wilaya}
-            onChange={e => setWilaya(e.target.value)}
-            className="w-full sm:flex-1 min-w-0 px-4 py-2.5 rounded-lg text-gray-800 text-sm bg-white"
-          >
-            <option value="">{t('search.all_wilayas')}</option>
-            {WILAYAS.map(w => (
-              <option key={w} value={w}>{w}</option>
-            ))}
-          </select>
-
+            onChange={setWilaya}
+            placeholder={t('search.all_wilayas')}
+            options={wilayaOptions}
+            className="w-full sm:flex-1"
+          />
           <button
             type="submit"
             className="px-6 py-2.5 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50"
