@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthContext'
 import { BADGE_STYLES } from '../components/ui/PrestaCard'
+import ContactSheet from '../components/ui/ContactSheet'
 
 export default function PrestaireProfile() {
   const { t } = useTranslation()
@@ -105,10 +106,12 @@ export default function PrestaireProfile() {
         )}
       </div>
 
-      {/* ContactSheet placeholder — wired in Task 6 */}
-      {contactOpen && (
-        <div data-testid="contact-sheet-placeholder" />
-      )}
+      <ContactSheet
+        open={contactOpen}
+        onClose={() => setContactOpen(false)}
+        prestaireId={id}
+        prestaireName={profile.display_name}
+      />
     </main>
   )
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthContext'
@@ -10,6 +10,8 @@ export default function Login() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { user } = useAuth()
+  const [searchParams] = useSearchParams()
+  const redirect = searchParams.get('redirect') || '/'
   const [tab, setTab] = useState('email')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -29,7 +31,7 @@ export default function Login() {
     setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) setError(t('errors.auth_failed'))
-    else navigate('/')
+    else navigate(redirect)
     setLoading(false)
   }
 
@@ -50,7 +52,7 @@ export default function Login() {
     setLoading(true)
     const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' })
     if (error) setError(t('errors.auth_failed'))
-    else navigate('/')
+    else navigate(redirect)
     setLoading(false)
   }
 
