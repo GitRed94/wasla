@@ -14,18 +14,24 @@ export default function Search() {
 
   const [results, setResults] = useState([])
   const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState(null)
 
   useEffect(() => {
     async function fetchResults() {
       setLoading(true)
+      setFetchError(null)
       let q = supabase
         .from('prestataire_profiles')
         .select('id, display_name, badge, wilaya, categories, avatar_url')
         .eq('is_visible', true)
       if (category) q = q.contains('categories', [category])
       if (wilaya) q = q.eq('wilaya', wilaya)
-      const { data } = await q.order('created_at', { ascending: false })
-      setResults(data ?? [])
+      const { data, error } = await q.order('created_at', { ascending: false })
+      if (error) {
+        setFetchError(error.message)
+      } else {
+        setResults(data ?? [])
+      }
       setLoading(false)
     }
     fetchResults()
@@ -66,6 +72,11 @@ export default function Search() {
           ))}
         </select>
       </div>
+
+      {/* Error banner */}
+      {fetchError && (
+        <p className="text-center text-red-500 py-4 text-sm">{fetchError}</p>
+      )}
 
       {/* Results */}
       {loading ? (

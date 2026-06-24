@@ -75,7 +75,6 @@ export default function Home() {
             <button
               key={cat.key}
               data-testid={`category-card-${cat.key}`}
-              data-testid-group="category-card"
               onClick={() => handleCategoryClick(cat.key)}
               className="flex flex-col items-center gap-2 p-5 bg-white rounded-xl border border-gray-200 hover:border-blue-400 hover:shadow-sm transition-all"
             >

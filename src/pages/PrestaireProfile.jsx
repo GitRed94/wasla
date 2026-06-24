@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
@@ -15,6 +15,8 @@ export default function PrestaireProfile() {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
   const [contactOpen, setContactOpen] = useState(false)
+
+  const handleContactClose = useCallback(() => setContactOpen(false), [])
 
   useEffect(() => {
     async function fetchProfile() {
@@ -85,30 +87,32 @@ export default function PrestaireProfile() {
       </section>
 
       {/* Sticky contact bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
-        {isClient && (
-          <button
-            data-testid="contact-btn"
-            onClick={() => setContactOpen(true)}
-            className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
-          >
-            {t('profile.contact_btn')}
-          </button>
-        )}
-        {isGuest && (
-          <button
-            data-testid="contact-btn-guest"
-            onClick={() => navigate(`/login?redirect=/prestataire/${id}`)}
-            className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
-          >
-            {t('profile.contact_btn')}
-          </button>
-        )}
-      </div>
+      {(isClient || isGuest) && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
+          {isClient && (
+            <button
+              data-testid="contact-btn"
+              onClick={() => setContactOpen(true)}
+              className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
+            >
+              {t('profile.contact_btn')}
+            </button>
+          )}
+          {isGuest && (
+            <button
+              data-testid="contact-btn-guest"
+              onClick={() => navigate(`/login?redirect=/prestataire/${id}`)}
+              className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700"
+            >
+              {t('profile.contact_btn')}
+            </button>
+          )}
+        </div>
+      )}
 
       <ContactSheet
         open={contactOpen}
-        onClose={() => setContactOpen(false)}
+        onClose={handleContactClose}
         prestaireId={id}
         prestaireName={profile.display_name}
       />
