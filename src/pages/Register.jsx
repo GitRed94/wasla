@@ -31,6 +31,7 @@ export default function Register() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
+  const [roleError, setRoleError] = useState(false)
 
   useEffect(() => {
     if (user) navigate('/')
@@ -49,7 +50,7 @@ export default function Register() {
 
   async function handleEmailRegister(e) {
     e.preventDefault()
-    if (!role) { setError(t('errors.required')); return }
+    if (!role) { setRoleError(true); setError(''); return }
     if (!passwordValid(password)) {
       setError('Le mot de passe ne respecte pas tous les critères de sécurité.')
       return
@@ -79,7 +80,7 @@ export default function Register() {
 
   async function handleSendOtp(e) {
     e.preventDefault()
-    if (!role) { setError(t('errors.required')); return }
+    if (!role) { setRoleError(true); setError(''); return }
     if (!PHONE_REGEX.test(phone)) { setError(t('errors.invalid_phone')); return }
     setError('')
     setSuccess('')
@@ -118,8 +119,10 @@ export default function Register() {
       <div className="w-full max-w-sm bg-white rounded-xl shadow-sm p-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('auth.register_title')}</h1>
 
-        <p className="text-sm font-medium text-gray-700 mb-3">{t('auth.choose_role')}</p>
-        <div className="space-y-2 mb-6">
+        <p className={`text-sm font-medium mb-3 ${roleError ? 'text-red-600' : 'text-gray-700'}`}>
+          {t('auth.choose_role')}{roleError && ' — sélectionnez une option'}
+        </p>
+        <div className={`space-y-2 mb-6 rounded-lg ${roleError ? 'outline outline-2 outline-red-400 p-2' : ''}`}>
           {['client', 'prestataire'].map(r => (
             <label
               key={r}
@@ -132,7 +135,7 @@ export default function Register() {
                 name="role"
                 value={r}
                 checked={role === r}
-                onChange={() => setRole(r)}
+                onChange={() => { setRole(r); setRoleError(false) }}
                 className="accent-blue-600"
               />
               <span className="text-sm">{t(`auth.role_${r}`)}</span>
