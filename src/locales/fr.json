@@ -74,5 +74,31 @@
     "send": "Envoyer",
     "success": "Message envoyé !",
     "login_required": "Connectez-vous pour contacter ce prestataire"
+  },
+  "messages": {
+    "title": "Mes messages",
+    "empty": "Aucune conversation pour le moment.",
+    "type_message": "Écrire un message...",
+    "send": "Envoyer",
+    "you": "Vous"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "requests": "Demandes reçues",
+    "empty": "Aucune demande reçue pour le moment.",
+    "client_label": "Client"
+  },
+  "profile_setup": {
+    "title": "Configurer mon profil",
+    "display_name": "Nom affiché",
+    "bio": "Description (optionnel)",
+    "bio_placeholder": "Décrivez votre expérience, vos spécialités...",
+    "wilaya": "Wilaya",
+    "commune": "Commune / Ville",
+    "years_exp": "Années d'expérience",
+    "categories": "Vos spécialités",
+    "save": "Enregistrer",
+    "saved": "Profil enregistré !",
+    "min_one_category": "Sélectionnez au moins une spécialité."
   }
 }

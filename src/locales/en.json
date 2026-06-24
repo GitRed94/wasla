@@ -74,5 +74,31 @@
     "send": "Send",
     "success": "Message sent!",
     "login_required": "Log in to contact this professional"
+  },
+  "messages": {
+    "title": "My messages",
+    "empty": "No conversations yet.",
+    "type_message": "Type a message...",
+    "send": "Send",
+    "you": "You"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "requests": "Received requests",
+    "empty": "No requests received yet.",
+    "client_label": "Client"
+  },
+  "profile_setup": {
+    "title": "Set up my profile",
+    "display_name": "Display name",
+    "bio": "About me (optional)",
+    "bio_placeholder": "Describe your experience and specialties...",
+    "wilaya": "Wilaya",
+    "commune": "Commune / City",
+    "years_exp": "Years of experience",
+    "categories": "Your specialties",
+    "save": "Save",
+    "saved": "Profile saved!",
+    "min_one_category": "Select at least one specialty."
   }
 }

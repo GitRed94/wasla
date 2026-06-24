@@ -5,6 +5,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import MonProfil from './pages/MonProfil'
 import Dashboard from './pages/Dashboard'
+import Messages from './pages/Messages'
+import Conversation from './pages/Conversation'
 import Search from './pages/Search'
 import PrestaireProfile from './pages/PrestaireProfile'
 import ProtectedRoute from './components/auth/ProtectedRoute'
@@ -22,6 +24,8 @@ export default function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/mon-profil" element={<MonProfil />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/messages/:id" element={<Conversation />} />
         </Route>
       </Routes>
     </div>
