@@ -22,8 +22,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (user) navigate('/')
-  }, [user, navigate])
+    if (user) navigate(redirect)
+  }, [user, navigate, redirect])
 
   async function handleEmailLogin(e) {
     e.preventDefault()

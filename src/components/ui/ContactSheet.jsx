@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '../../supabaseClient'
 import { useAuth } from '../../context/AuthContext'
@@ -10,6 +10,12 @@ export default function ContactSheet({ open, onClose, prestaireId, prestaireName
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (!success) return
+    const timer = setTimeout(onClose, 1500)
+    return () => clearTimeout(timer)
+  }, [success, onClose])
 
   if (!open) return null
 
@@ -38,7 +44,6 @@ export default function ContactSheet({ open, onClose, prestaireId, prestaireName
 
     setSuccess(true)
     setLoading(false)
-    setTimeout(onClose, 1500)
   }
 
   return (
