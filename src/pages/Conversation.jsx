@@ -83,7 +83,7 @@ export default function Conversation() {
     return t('dashboard.client_label')
   }
 
-  if (loading) return <div className="p-8 text-center text-gray-400">Chargement...</div>
+  if (loading) return <div className="p-8 text-center text-gray-400">{t('messages.loading')}</div>
 
   return (
     <main className="max-w-2xl mx-auto flex flex-col" style={{ height: 'calc(100vh - 57px)' }}>

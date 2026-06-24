@@ -80,7 +80,8 @@
     "empty": "No conversations yet.",
     "type_message": "Type a message...",
     "send": "Send",
-    "you": "You"
+    "you": "You",
+    "loading": "Loading..."
   },
   "dashboard": {
     "title": "Dashboard",

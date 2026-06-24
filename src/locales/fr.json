@@ -80,7 +80,8 @@
     "empty": "Aucune conversation pour le moment.",
     "type_message": "Écrire un message...",
     "send": "Envoyer",
-    "you": "Vous"
+    "you": "Vous",
+    "loading": "Chargement..."
   },
   "dashboard": {
     "title": "Tableau de bord",
