@@ -14,13 +14,13 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
-      <Link to="/" className="text-xl font-bold text-blue-600">
+    <nav className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between gap-2">
+      <Link to="/" className="text-lg sm:text-xl font-bold text-blue-600 shrink-0">
         {t('app_name')}
       </Link>
 
-      <div className="flex items-center gap-4">
-        <Link to="/search" className="text-sm text-gray-700 hover:text-blue-600">
+      <div className="flex items-center gap-2 min-w-0">
+        <Link to="/search" className="hidden sm:block text-sm text-gray-700 hover:text-blue-600 shrink-0">
           {t('nav.search')}
         </Link>
 
@@ -28,25 +28,25 @@ export default function Navbar() {
           <>
             <Link
               to={profile?.role === 'prestataire' ? '/dashboard' : '/messages'}
-              className="text-sm text-gray-700 hover:text-blue-600"
+              className="hidden sm:block text-sm text-gray-700 hover:text-blue-600 shrink-0"
             >
               {profile?.role === 'prestataire' ? t('nav.dashboard') : t('nav.messages')}
             </Link>
             <button
               onClick={handleSignOut}
-              className="text-sm text-gray-700 hover:text-red-600"
+              className="text-sm text-gray-700 hover:text-red-600 shrink-0"
             >
               {t('nav.logout')}
             </button>
           </>
         ) : (
           <>
-            <Link to="/login" className="text-sm text-gray-700 hover:text-blue-600">
+            <Link to="/login" className="text-sm text-gray-700 hover:text-blue-600 shrink-0">
               {t('nav.login')}
             </Link>
             <Link
               to="/register"
-              className="text-sm bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700"
+              className="hidden sm:inline-flex text-sm bg-blue-600 text-white px-3 py-1.5 rounded hover:bg-blue-700 shrink-0"
             >
               {t('nav.register')}
             </Link>

@@ -29,10 +29,15 @@ export default function Login() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setError(t('errors.auth_failed'))
-    else navigate(redirect)
-    setLoading(false)
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) setError(t('errors.auth_failed'))
+      else navigate(redirect)
+    } catch {
+      setError(t('errors.generic'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function handleSendOtp(e) {
@@ -40,20 +45,30 @@ export default function Login() {
     if (!PHONE_REGEX.test(phone)) { setError(t('errors.invalid_phone')); return }
     setError('')
     setLoading(true)
-    const { error } = await supabase.auth.signInWithOtp({ phone })
-    if (error) setError(t('errors.auth_failed'))
-    else setOtpSent(true)
-    setLoading(false)
+    try {
+      const { error } = await supabase.auth.signInWithOtp({ phone })
+      if (error) setError(t('errors.auth_failed'))
+      else setOtpSent(true)
+    } catch {
+      setError(t('errors.generic'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function handleVerifyOtp(e) {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' })
-    if (error) setError(t('errors.auth_failed'))
-    else navigate(redirect)
-    setLoading(false)
+    try {
+      const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' })
+      if (error) setError(t('errors.auth_failed'))
+      else navigate(redirect)
+    } catch {
+      setError(t('errors.generic'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

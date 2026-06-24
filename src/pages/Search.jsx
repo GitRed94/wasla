@@ -51,7 +51,7 @@ export default function Search() {
         <select
           value={category}
           onChange={e => handleFilter('category', e.target.value)}
-          className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+          className="flex-1 min-w-0 border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
         >
           <option value="">{t('search.all_categories')}</option>
           {CATEGORIES.map(cat => (
@@ -64,7 +64,7 @@ export default function Search() {
         <select
           value={wilaya}
           onChange={e => handleFilter('wilaya', e.target.value)}
-          className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+          className="flex-1 min-w-0 border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white"
         >
           <option value="">{t('search.all_wilayas')}</option>
           {WILAYAS.map(w => (

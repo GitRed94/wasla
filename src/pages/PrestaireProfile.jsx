@@ -41,13 +41,13 @@ export default function PrestaireProfile() {
     <main className="max-w-2xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-4xl shrink-0">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-200 flex items-center justify-center text-3xl sm:text-4xl shrink-0">
           {profile.avatar_url
             ? <img src={profile.avatar_url} alt={profile.display_name} className="w-full h-full object-cover rounded-full" />
             : '👤'}
         </div>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{profile.display_name}</h1>
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">{profile.display_name}</h1>
           <p className="text-gray-500 text-sm">{profile.wilaya}</p>
           <span className={`inline-block mt-1 text-xs font-medium px-2 py-0.5 rounded-full ${BADGE_STYLES[profile.badge] ?? BADGE_STYLES.unverified}`}>
             {t(`profile.badge_${profile.badge}`)}

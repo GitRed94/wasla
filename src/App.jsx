@@ -11,7 +11,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
