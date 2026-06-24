@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext'
 function formatTime(iso) {
   if (!iso) return ''
   const d = new Date(iso)
-  return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+  return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' })
 }
 
 export default function Messages() {
@@ -42,7 +42,7 @@ export default function Messages() {
     return [...msgs].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0]
   }
 
-  if (loading) return <div className="p-8 text-center text-gray-400">Chargement...</div>
+  if (loading) return <div className="p-8 text-center text-gray-400">{t('messages.loading')}</div>
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-6">

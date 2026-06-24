@@ -54,6 +54,7 @@ export default function MonProfil() {
   async function handleSubmit(e) {
     e.preventDefault()
     if (!displayName.trim()) { setError(t('errors.required')); return }
+    if (!wilaya) { setError(t('errors.required')); return }
     if (!commune.trim()) { setError(t('errors.required')); return }
     if (categories.length === 0) { setError(t('profile_setup.min_one_category')); return }
     setError('')

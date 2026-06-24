@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext'
 
 function formatTime(iso) {
   if (!iso) return ''
-  return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+  return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })
 }
 
 export default function Dashboard() {

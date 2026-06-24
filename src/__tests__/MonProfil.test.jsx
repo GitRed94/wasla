@@ -67,6 +67,13 @@ test('submit calls supabase upsert', async () => {
   await waitFor(() => screen.getByLabelText(/Nom affiché/i))
 
   fireEvent.change(screen.getByLabelText(/Nom affiché/i), { target: { value: 'Karim Pro' } })
+
+  // Open the wilaya SelectField and pick the first real option
+  fireEvent.click(screen.getByText(/toutes les wilayas/i).closest('button'))
+  await waitFor(() => screen.getAllByRole('option'))
+  const options = screen.getAllByRole('option')
+  fireEvent.click(options[1]) // index 0 is the "clear" placeholder, index 1 is first real wilaya
+
   fireEvent.change(screen.getByLabelText(/Commune/i), { target: { value: 'Alger Centre' } })
 
   // Select at least one category checkbox
