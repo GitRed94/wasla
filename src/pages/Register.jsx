@@ -18,6 +18,7 @@ export default function Register() {
   const [otp, setOtp] = useState('')
   const [otpSent, setOtpSent] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -29,15 +30,31 @@ export default function Register() {
     if (!role) { setError(t('errors.required')); return }
     if (password.length < 8) { setError(t('errors.password_too_short')); return }
     setError('')
+    setSuccess('')
     setLoading(true)
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { role } },
-    })
-    if (error) setError(t('errors.auth_failed'))
-    else navigate(role === 'prestataire' ? '/mon-profil' : '/')
-    setLoading(false)
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { role } },
+      })
+      if (error) {
+        const msg = error.message?.toLowerCase() ?? ''
+        if (msg.includes('already registered') || msg.includes('already exists') || error.status === 422) {
+          setError('Cet email est déjà utilisé. Connectez-vous plutôt.')
+        } else {
+          setError(t('errors.auth_failed'))
+        }
+      } else if (data.user && !data.session) {
+        setSuccess('Inscription réussie ! Vérifiez votre email pour activer votre compte, puis connectez-vous.')
+      } else {
+        navigate(role === 'prestataire' ? '/mon-profil' : '/')
+      }
+    } catch {
+      setError(t('errors.generic'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function handleSendOtp(e) {
@@ -45,24 +62,35 @@ export default function Register() {
     if (!role) { setError(t('errors.required')); return }
     if (!PHONE_REGEX.test(phone)) { setError(t('errors.invalid_phone')); return }
     setError('')
+    setSuccess('')
     setLoading(true)
-    const { error } = await supabase.auth.signInWithOtp({
-      phone,
-      options: { data: { role } },
-    })
-    if (error) setError(t('errors.auth_failed'))
-    else setOtpSent(true)
-    setLoading(false)
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        phone,
+        options: { data: { role } },
+      })
+      if (error) setError(t('errors.auth_failed'))
+      else setOtpSent(true)
+    } catch {
+      setError(t('errors.generic'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function handleVerifyOtp(e) {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' })
-    if (error) setError(t('errors.auth_failed'))
-    else navigate(role === 'prestataire' ? '/mon-profil' : '/')
-    setLoading(false)
+    try {
+      const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' })
+      if (error) setError(t('errors.auth_failed'))
+      else navigate(role === 'prestataire' ? '/mon-profil' : '/')
+    } catch {
+      setError(t('errors.generic'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -108,6 +136,7 @@ export default function Register() {
         </div>
 
         {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+        {success && <p className="text-green-600 text-sm mb-4 font-medium">{success}</p>}
 
         {tab === 'email' && (
           <form onSubmit={handleEmailRegister} className="space-y-4">

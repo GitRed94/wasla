@@ -5,5 +5,6 @@ export const CATEGORIES = [
   { key: 'frigoriste',    emoji: '🧊' },
   { key: 'peintre',       emoji: '🖌️' },
   { key: 'menuisier',     emoji: '🪵' },
+  { key: 'serrurier',     emoji: '🔑' },
   { key: 'informaticien', emoji: '💻' },
 ]

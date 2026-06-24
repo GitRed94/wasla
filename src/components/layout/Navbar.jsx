@@ -20,8 +20,9 @@ export default function Navbar() {
       </Link>
 
       <div className="flex items-center gap-2 min-w-0">
-        <Link to="/search" className="hidden sm:block text-sm text-gray-700 hover:text-blue-600 shrink-0">
-          {t('nav.search')}
+        <Link to="/search" className="text-gray-700 hover:text-blue-600 shrink-0 flex items-center gap-1">
+          <span>🔍</span>
+          <span className="hidden sm:inline text-sm">{t('nav.search')}</span>
         </Link>
 
         {user ? (

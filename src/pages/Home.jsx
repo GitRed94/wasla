@@ -38,7 +38,7 @@ export default function Home() {
           <select
             value={category}
             onChange={e => setCategory(e.target.value)}
-            className="flex-1 min-w-0 px-4 py-2.5 rounded-lg text-gray-800 text-sm bg-white"
+            className="w-full sm:flex-1 min-w-0 px-4 py-2.5 rounded-lg text-gray-800 text-sm bg-white"
           >
             <option value="">{t('search.all_categories')}</option>
             {CATEGORIES.map(cat => (
@@ -51,7 +51,7 @@ export default function Home() {
           <select
             value={wilaya}
             onChange={e => setWilaya(e.target.value)}
-            className="flex-1 min-w-0 px-4 py-2.5 rounded-lg text-gray-800 text-sm bg-white"
+            className="w-full sm:flex-1 min-w-0 px-4 py-2.5 rounded-lg text-gray-800 text-sm bg-white"
           >
             <option value="">{t('search.all_wilayas')}</option>
             {WILAYAS.map(w => (

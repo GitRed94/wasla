@@ -1,8 +1,8 @@
 import { CATEGORIES } from '../data/categories'
 import { WILAYAS } from '../data/wilayas'
 
-test('CATEGORIES has 7 items each with key and emoji', () => {
-  expect(CATEGORIES).toHaveLength(7)
+test('CATEGORIES has 8 items each with key and emoji', () => {
+  expect(CATEGORIES).toHaveLength(8)
   CATEGORIES.forEach(cat => {
     expect(cat).toHaveProperty('key')
     expect(cat).toHaveProperty('emoji')
@@ -15,7 +15,7 @@ test('CATEGORIES keys are the expected values', () => {
   const keys = CATEGORIES.map(c => c.key)
   expect(keys).toEqual([
     'plombier', 'electricien', 'climaticien',
-    'frigoriste', 'peintre', 'menuisier', 'informaticien'
+    'frigoriste', 'peintre', 'menuisier', 'serrurier', 'informaticien'
   ])
 })
 

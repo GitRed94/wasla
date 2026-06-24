@@ -39,6 +39,13 @@ export default function PrestaireProfile() {
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-8">
+      <button
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-4"
+      >
+        ← Retour
+      </button>
+
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-200 flex items-center justify-center text-3xl sm:text-4xl shrink-0">

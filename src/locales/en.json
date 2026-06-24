@@ -48,6 +48,7 @@
     "frigoriste": "Refrigeration Tech",
     "peintre": "Painter",
     "menuisier": "Carpenter",
+    "serrurier": "Locksmith",
     "informaticien": "IT Technician"
   },
   "search": {

@@ -126,7 +126,7 @@ export default function Login() {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
             >
-              {t('auth.submit_login')}
+              {loading ? 'Connexion en cours...' : t('auth.submit_login')}
             </button>
           </form>
         )}

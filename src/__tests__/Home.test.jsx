@@ -29,11 +29,11 @@ test('renders hero title and subtitle', () => {
   expect(screen.getByText(/Trouvez le bon prestataire/i)).toBeInTheDocument()
 })
 
-test('renders 7 category cards', () => {
+test('renders 8 category cards', () => {
   render(<Home />, { wrapper: Wrapper })
   expect(screen.getByText('🔧')).toBeInTheDocument()
   expect(screen.getByText('⚡')).toBeInTheDocument()
-  expect(screen.getAllByTestId(/^category-card-/)).toHaveLength(7)
+  expect(screen.getAllByTestId(/^category-card-/)).toHaveLength(8)
 })
 
 test('clicking a category card navigates to /search with category param', () => {
