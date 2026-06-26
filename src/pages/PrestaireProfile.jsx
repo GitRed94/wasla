@@ -31,8 +31,8 @@ export default function PrestaireProfile() {
     fetchProfile()
   }, [id])
 
-  if (loading) return <div className="p-8 text-center text-gray-400">Chargement...</div>
-  if (!profile) return <div className="p-8 text-center text-gray-500">Profil introuvable.</div>
+  if (loading) return <div className="p-8 text-center text-gray-400">{t('profile.loading')}</div>
+  if (!profile) return <div className="p-8 text-center text-gray-500">{t('profile.not_found')}</div>
 
   const isClient = user && authProfile?.role === 'client'
   const isGuest = !user

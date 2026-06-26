@@ -67,7 +67,9 @@
     "badge_unverified": "Unverified",
     "badge_verified": "Verified ✓",
     "badge_trusted": "Trusted ⭐",
-    "years_exp": "{{count}} year(s) experience"
+    "years_exp": "{{count}} year(s) experience",
+    "loading": "Loading...",
+    "not_found": "Profile not found."
   },
   "contact": {
     "placeholder": "Describe your need in a few words...",

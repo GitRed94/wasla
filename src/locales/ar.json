@@ -67,7 +67,9 @@
     "badge_unverified": "غير موثّق",
     "badge_verified": "موثّق ✓",
     "badge_trusted": "موثوق ⭐",
-    "years_exp": "{{count}} سنة خبرة"
+    "years_exp": "{{count}} سنة خبرة",
+    "loading": "جارٍ التحميل...",
+    "not_found": "الملف غير موجود."
   },
   "contact": {
     "placeholder": "صف حاجتك في بضع كلمات...",

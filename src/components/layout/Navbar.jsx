@@ -29,9 +29,12 @@ export default function Navbar() {
           <>
             <Link
               to={profile?.role === 'prestataire' ? '/dashboard' : '/messages'}
-              className="hidden sm:block text-sm text-gray-700 hover:text-blue-600 shrink-0"
+              className="text-gray-700 hover:text-blue-600 shrink-0 flex items-center gap-1"
             >
-              {profile?.role === 'prestataire' ? t('nav.dashboard') : t('nav.messages')}
+              <span>{profile?.role === 'prestataire' ? '📋' : '💬'}</span>
+              <span className="hidden sm:inline text-sm">
+                {profile?.role === 'prestataire' ? t('nav.dashboard') : t('nav.messages')}
+              </span>
             </Link>
             <button
               onClick={handleSignOut}

@@ -67,7 +67,9 @@
     "badge_unverified": "Non vérifié",
     "badge_verified": "Vérifié ✓",
     "badge_trusted": "Fiable ⭐",
-    "years_exp": "{{count}} an(s) d'expérience"
+    "years_exp": "{{count}} an(s) d'expérience",
+    "loading": "Chargement...",
+    "not_found": "Profil introuvable."
   },
   "contact": {
     "placeholder": "Décrivez votre besoin en quelques mots...",
