@@ -13,6 +13,7 @@ export default function PrestaireProfile() {
   const { user, profile: authProfile } = useAuth()
 
   const [profile, setProfile] = useState(null)
+  const [portfolioPhotos, setPortfolioPhotos] = useState([])
   const [loading, setLoading] = useState(true)
   const [contactOpen, setContactOpen] = useState(false)
 
@@ -20,13 +21,14 @@ export default function PrestaireProfile() {
 
   useEffect(() => {
     async function fetchProfile() {
-      const { data, error } = await supabase
-        .from('prestataire_profiles')
-        .select('*')
-        .eq('id', id)
-        .single()
-      if (!error) setProfile(data)
+      const [profileResult, photosResult] = await Promise.all([
+        supabase.from('prestataire_profiles').select('*').eq('id', id).single(),
+        supabase.from('portfolio_photos').select('*').eq('prestataire_id', id).order('created_at'),
+      ])
+      if (!profileResult.error) setProfile(profileResult.data)
+      setPortfolioPhotos(photosResult.data ?? [])
       setLoading(false)
+      supabase.rpc('increment_profile_views', { presta_id: id })
     }
     fetchProfile()
   }, [id])
@@ -84,7 +86,27 @@ export default function PrestaireProfile() {
       {/* Portfolio */}
       <section className="mb-8">
         <h2 className="text-lg font-semibold text-gray-800 mb-3">Portfolio</h2>
-        <p className="text-gray-400 text-sm">{t('profile.no_portfolio')}</p>
+        {portfolioPhotos.length === 0 ? (
+          <p className="text-gray-400 text-sm">{t('profile.no_portfolio')}</p>
+        ) : (
+          <>
+            <p className="text-xs text-gray-400 mb-3">{t('portfolio.disclaimer')}</p>
+            <div className="grid grid-cols-2 gap-3">
+              {portfolioPhotos.map(photo => (
+                <div key={photo.id} className="rounded-xl overflow-hidden border border-gray-200">
+                  <img
+                    src={photo.photo_url}
+                    alt={photo.caption ?? ''}
+                    className="w-full h-32 object-cover"
+                  />
+                  {photo.caption && (
+                    <p className="text-xs text-gray-600 px-2 py-1 truncate">{photo.caption}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </section>
 
       {/* Reviews */}

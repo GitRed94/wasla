@@ -19,9 +19,21 @@ vi.mock('../supabaseClient', () => {
     ],
     error: null,
   })
-  const mockEq = vi.fn().mockReturnValue({ order: mockOrder })
-  const mockSelect = vi.fn().mockReturnValue({ eq: mockEq })
-  return { supabase: { from: vi.fn().mockReturnValue({ select: mockSelect }) } }
+  const mockConvEq = vi.fn().mockReturnValue({ order: mockOrder })
+  const mockConvSelect = vi.fn().mockReturnValue({ eq: mockConvEq })
+
+  const mockProfileSingle = vi.fn().mockResolvedValue({ data: { views: 42 }, error: null })
+  const mockProfileEq = vi.fn().mockReturnValue({ single: mockProfileSingle })
+  const mockProfileSelect = vi.fn().mockReturnValue({ eq: mockProfileEq })
+
+  return {
+    supabase: {
+      from: vi.fn().mockImplementation((table) => {
+        if (table === 'prestataire_profiles') return { select: mockProfileSelect }
+        return { select: mockConvSelect }
+      }),
+    },
+  }
 })
 
 vi.mock('../context/AuthContext', () => ({
@@ -75,4 +87,12 @@ test('clicking a request navigates to /messages/:id', async () => {
   await waitFor(() => screen.getByText(/robinet cassé/i))
   fireEvent.click(screen.getByText(/robinet cassé/i))
   expect(mockNavigate).toHaveBeenCalledWith('/messages/conv-1')
+})
+
+test('shows profile views count', async () => {
+  i18n.changeLanguage('fr')
+  render(<Dashboard />, { wrapper: Wrapper })
+  await waitFor(() => {
+    expect(screen.getByText(/42/)).toBeInTheDocument()
+  })
 })

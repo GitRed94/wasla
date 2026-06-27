@@ -15,24 +15,28 @@ export default function Dashboard() {
   const navigate = useNavigate()
 
   const [conversations, setConversations] = useState([])
+  const [views, setViews] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function fetchConversations() {
-      const { data } = await supabase
-        .from('conversations')
-        .select(`
-          id,
-          client_id,
-          created_at,
-          messages ( id, content, created_at, sender_id )
-        `)
-        .eq('prestataire_id', user.id)
-        .order('created_at', { ascending: false })
-      setConversations(data ?? [])
+    async function fetchData() {
+      const [convsResult, profileResult] = await Promise.all([
+        supabase
+          .from('conversations')
+          .select(`id, client_id, created_at, messages ( id, content, created_at, sender_id )`)
+          .eq('prestataire_id', user.id)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('prestataire_profiles')
+          .select('views')
+          .eq('id', user.id)
+          .single(),
+      ])
+      setConversations(convsResult.data ?? [])
+      setViews(profileResult.data?.views ?? 0)
       setLoading(false)
     }
-    fetchConversations()
+    fetchData()
   }, [user.id])
 
   function getLastMsg(msgs) {
@@ -46,6 +50,16 @@ export default function Dashboard() {
     <main className="max-w-2xl mx-auto px-4 py-6">
       <h1 className="text-xl font-bold text-gray-900 mb-1">{t('dashboard.title')}</h1>
       <p className="text-sm text-gray-500 mb-5">{t('dashboard.requests')}</p>
+
+      {views !== null && (
+        <div className="flex items-center gap-2 mb-5 bg-blue-50 rounded-xl px-4 py-3">
+          <span className="text-2xl">👁</span>
+          <div>
+            <p className="text-sm font-medium text-blue-800">{t('dashboard.views_label')}</p>
+            <p className="text-lg font-bold text-blue-900">{t('dashboard.views', { count: views })}</p>
+          </div>
+        </div>
+      )}
 
       {conversations.length === 0 ? (
         <p className="text-center text-gray-500 py-16">{t('dashboard.empty')}</p>

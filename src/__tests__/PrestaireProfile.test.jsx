@@ -20,27 +20,43 @@ const mockProfile = {
 
 vi.mock('../supabaseClient', () => ({
   supabase: {
-    from: vi.fn().mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          single: vi.fn().mockResolvedValue({
-            data: {
-              id: 'abc-1',
-              display_name: 'Karim Benali',
-              bio: 'Électricien à Alger.',
-              badge: 'verified',
-              wilaya: 'Alger',
-              commune: 'Alger Centre',
-              categories: ['electricien'],
-              avatar_url: null,
-              years_experience: 8,
-              is_visible: true,
-            },
-            error: null,
+    from: vi.fn().mockImplementation((table) => {
+      if (table === 'portfolio_photos') return {
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            order: vi.fn().mockResolvedValue({
+              data: [
+                { id: 'p1', photo_url: 'https://example.com/img1.jpg', caption: 'Travail cuisine' },
+              ],
+              error: null,
+            }),
           }),
         }),
-      }),
+      }
+      // prestataire_profiles
+      return {
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            single: vi.fn().mockResolvedValue({
+              data: {
+                id: 'abc-1',
+                display_name: 'Karim Benali',
+                bio: 'Électricien à Alger.',
+                badge: 'verified',
+                wilaya: 'Alger',
+                commune: 'Alger Centre',
+                categories: ['electricien'],
+                avatar_url: null,
+                years_experience: 8,
+                is_visible: true,
+              },
+              error: null,
+            }),
+          }),
+        }),
+      }
     }),
+    rpc: vi.fn().mockResolvedValue({ error: null }),
   },
 }))
 
@@ -97,5 +113,13 @@ test('redirects to /login when unauthenticated user clicks contact', async () =>
   render(<PrestaireProfile />, { wrapper: Wrapper })
   await waitFor(() => {
     expect(screen.getByTestId('contact-btn-guest')).toBeInTheDocument()
+  })
+})
+
+test('shows portfolio photo with caption', async () => {
+  i18n.changeLanguage('fr')
+  render(<PrestaireProfile />, { wrapper: Wrapper })
+  await waitFor(() => {
+    expect(screen.getByAltText(/travail cuisine/i)).toBeInTheDocument()
   })
 })
