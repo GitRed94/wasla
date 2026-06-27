@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { CATEGORIES } from '../data/categories'
+import { CATEGORIES, CATEGORY_CLUSTERS } from '../data/categories'
 import { WILAYAS } from '../data/wilayas'
 import SelectField from '../components/ui/SelectField'
 
@@ -62,23 +62,33 @@ export default function Home() {
         </form>
       </section>
 
-      {/* Category grid */}
-      <section className="px-6 py-10 max-w-4xl mx-auto">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {CATEGORIES.slice(0, 8).map(cat => (
-            <button
-              key={cat.key}
-              data-testid={`category-card-${cat.key}`}
-              onClick={() => handleCategoryClick(cat.key)}
-              className="flex flex-col items-center gap-2 p-5 bg-white rounded-xl border border-gray-200 hover:border-blue-400 hover:shadow-sm transition-all"
-            >
-              <span className="text-3xl">{cat.emoji}</span>
-              <span className="text-sm font-medium text-gray-700">
-                {t(`categories.${cat.key}`)}
-              </span>
-            </button>
-          ))}
-        </div>
+      {/* Category clusters */}
+      <section className="px-6 py-10 max-w-4xl mx-auto space-y-8">
+        {CATEGORY_CLUSTERS.map(cluster => {
+          const cats = CATEGORIES.filter(c => c.cluster === cluster.key)
+          return (
+            <div key={cluster.key}>
+              <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                {cluster.label}
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {cats.map(cat => (
+                  <button
+                    key={cat.key}
+                    data-testid={`category-card-${cat.key}`}
+                    onClick={() => handleCategoryClick(cat.key)}
+                    className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-400 hover:shadow-sm transition-all"
+                  >
+                    <span className="text-3xl">{cat.emoji}</span>
+                    <span className="text-sm font-medium text-gray-700 text-center leading-tight">
+                      {t(`categories.${cat.key}`)}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )
+        })}
       </section>
     </main>
   )
