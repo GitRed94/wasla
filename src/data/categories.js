@@ -54,4 +54,5 @@ export const INCOMPATIBLE_PAIRS = [
   ['reparation_telephone', 'serrurier'],
   ['reparation_telephone', 'vitrier'],
   ['reparation_telephone', 'etancheur'],
+  ['reparation_telephone', 'electromenager'],
 ]
