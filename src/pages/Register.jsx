@@ -8,7 +8,6 @@ import { WILAYAS } from '../data/wilayas'
 import SelectField from '../components/ui/SelectField'
 
 const PHONE_REGEX = /^\+213[5-7][0-9]{8}$/
-const ALGERIA_PHONE_REGEX = /^\+213[5-7][0-9]{8}$/
 
 const PASSWORD_RULES = [
   { test: v => v.length >= 8,          label: '8 caractères minimum' },
@@ -181,21 +180,26 @@ export default function Register() {
     if (!primaryCategory) { setError(t('errors.required')); return }
     setError('')
     setLoading(true)
-    const categories = [primaryCategory, ...secondaryCategories]
-    const { error } = await supabase
-      .from('prestataire_profiles')
-      .upsert({
-        id: userId,
-        display_name: displayName.trim(),
-        wilaya,
-        commune: commune.trim(),
-        primary_category: primaryCategory,
-        categories,
-        is_visible: true,
-      })
-    setLoading(false)
-    if (error) { setError(t('errors.generic')); return }
-    afterStep2('prestataire')
+    try {
+      const categories = [primaryCategory, ...secondaryCategories]
+      const { error } = await supabase
+        .from('prestataire_profiles')
+        .upsert({
+          id: userId,
+          display_name: displayName.trim(),
+          wilaya,
+          commune: commune.trim(),
+          primary_category: primaryCategory,
+          categories,
+          is_visible: true,
+        })
+      if (error) { setError(t('errors.generic')); return }
+      afterStep2('prestataire')
+    } catch {
+      setError(t('errors.generic'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   async function handleStep2ClientSubmit(e) {
@@ -203,23 +207,28 @@ export default function Register() {
     if (!firstName.trim()) { setError(t('errors.required')); return }
     if (!lastName.trim()) { setError(t('errors.required')); return }
     if (!clientWilaya) { setError(t('errors.required')); return }
-    if (clientPhone && !ALGERIA_PHONE_REGEX.test(clientPhone)) {
+    if (clientPhone && !PHONE_REGEX.test(clientPhone)) {
       setError(t('errors.invalid_phone')); return
     }
     setError('')
     setLoading(true)
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        first_name: firstName.trim(),
-        last_name: lastName.trim(),
-        wilaya: clientWilaya,
-        contact_phone: clientPhone.trim() || null,
-      })
-      .eq('id', userId)
-    setLoading(false)
-    if (error) { setError(t('errors.generic')); return }
-    afterStep2('client')
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          first_name: firstName.trim(),
+          last_name: lastName.trim(),
+          wilaya: clientWilaya,
+          contact_phone: clientPhone.trim() || null,
+        })
+        .eq('id', userId)
+      if (error) { setError(t('errors.generic')); return }
+      afterStep2('client')
+    } catch {
+      setError(t('errors.generic'))
+    } finally {
+      setLoading(false)
+    }
   }
 
   // ── Step 2 render ──────────────────────────────────────────────
