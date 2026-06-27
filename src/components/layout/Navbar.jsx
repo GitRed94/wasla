@@ -28,6 +28,13 @@ export default function Navbar() {
         {user ? (
           <>
             <Link
+              to={profile?.role === 'prestataire' ? '/mon-profil-presta' : '/mon-profil-client'}
+              className="text-gray-700 hover:text-blue-600 shrink-0 flex items-center gap-1"
+            >
+              <span>👤</span>
+              <span className="hidden sm:inline text-sm">{t('nav.my_profile')}</span>
+            </Link>
+            <Link
               to={profile?.role === 'prestataire' ? '/dashboard' : '/messages'}
               className="text-gray-700 hover:text-blue-600 shrink-0 flex items-center gap-1"
             >

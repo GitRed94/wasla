@@ -84,7 +84,7 @@
   "client_profile": {
     "title": "Mon profil",
     "first_name": "Prénom",
-    "last_name": "Nom",
+    "last_name": "Nom de famille",
     "phone": "Téléphone (optionnel)",
     "phone_privacy": "Votre numéro ne sera jamais partagé.",
     "phone_hint": "Format : +213XXXXXXXXX",
