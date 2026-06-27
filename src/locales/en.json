@@ -162,6 +162,7 @@
     "secondary_categories": "Secondary trades (optional, max 2)",
     "warning_incompatible": "You selected very different trades. Make sure you actually offer all these services.",
     "categories_locked": "Your trades are locked. Contact support to change them: support@wasla.dz",
-    "visibility_warning": "Your profile is not yet visible to clients. Select at least one trade to appear in search results."
+    "visibility_warning": "Your profile is not yet visible to clients. Select at least one trade to appear in search results.",
+    "primary_label": "(primary)"
   }
 }

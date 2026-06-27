@@ -162,6 +162,7 @@
     "secondary_categories": "Métiers secondaires (optionnel, max 2)",
     "warning_incompatible": "Vous avez sélectionné des métiers très différents. Assurez-vous de proposer réellement ces services.",
     "categories_locked": "Vos métiers sont verrouillés. Contactez le support pour les modifier : support@wasla.dz",
-    "visibility_warning": "Votre profil n'est pas encore visible des clients. Sélectionnez au moins un métier pour apparaître dans les résultats."
+    "visibility_warning": "Votre profil n'est pas encore visible des clients. Sélectionnez au moins un métier pour apparaître dans les résultats.",
+    "primary_label": "(principal)"
   }
 }

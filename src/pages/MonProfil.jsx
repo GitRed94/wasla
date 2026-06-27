@@ -157,11 +157,19 @@ export default function MonProfil() {
 
   async function handlePhotoDelete(photo) {
     const path = photo.photo_url.split('/storage/v1/object/public/portfolio/')[1]
-    await Promise.all([
-      supabase.storage.from('portfolio').remove([path]),
-      supabase.from('portfolio_photos').delete().eq('id', photo.id),
-    ])
-    setPhotos(prev => prev.filter(p => p.id !== photo.id))
+    try {
+      const [storageResult, dbResult] = await Promise.all([
+        supabase.storage.from('portfolio').remove([path]),
+        supabase.from('portfolio_photos').delete().eq('id', photo.id),
+      ])
+      if (storageResult.error || dbResult.error) {
+        setError(t('errors.generic'))
+        return
+      }
+      setPhotos(prev => prev.filter(p => p.id !== photo.id))
+    } catch {
+      setError(t('errors.generic'))
+    }
   }
 
   if (fetching) return <div className="p-8 text-center text-gray-400">{t('profile_setup.loading')}</div>
@@ -240,7 +248,7 @@ export default function MonProfil() {
                 return (
                   <span key={key} className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
                     {cat?.emoji} {t(`categories.${key}`)}
-                    {key === primaryCategory && <span className="ml-1 text-xs text-blue-600">(principal)</span>}
+                    {key === primaryCategory && <span className="ml-1 text-xs text-blue-600">{t('profile_setup.primary_label')}</span>}
                   </span>
                 )
               })}
