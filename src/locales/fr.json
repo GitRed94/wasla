@@ -46,10 +46,52 @@
     "electricien": "Électricien",
     "climaticien": "Climaticien",
     "frigoriste": "Frigoriste",
+    "macon": "Maçon",
+    "carreleur": "Carreleur",
+    "etancheur": "Étancheur",
     "peintre": "Peintre",
-    "menuisier": "Menuisier",
+    "platrier": "Plâtrier",
+    "menuisier": "Menuisier bois",
+    "menuisier_alu": "Menuisier aluminium",
     "serrurier": "Serrurier",
-    "informaticien": "Informaticien"
+    "vitrier": "Vitrier",
+    "cameras": "Caméras & Vidéosurveillance",
+    "alarmes": "Alarmes & Contrôle d'accès",
+    "electromenager": "Réparation électroménager",
+    "panneaux_solaires": "Panneaux solaires",
+    "informaticien": "Informatique & Réseaux",
+    "reparation_telephone": "Réparation téléphone"
+  },
+  "register_step2": {
+    "title_presta": "Complétez votre profil prestataire",
+    "title_client": "Complétez votre profil",
+    "subtitle_presta": "Ces informations vous permettront d'être trouvé par des clients.",
+    "subtitle_client": "Quelques informations pour personnaliser votre expérience.",
+    "display_name": "Nom affiché",
+    "first_name": "Prénom",
+    "last_name": "Nom de famille",
+    "phone_optional": "Téléphone (optionnel)",
+    "phone_hint": "Format : +213XXXXXXXXX (ex: +213612345678)",
+    "phone_privacy": "Votre numéro ne sera jamais partagé sans votre accord.",
+    "primary_category": "Métier principal",
+    "secondary_categories": "Métiers secondaires (optionnel, max 2)",
+    "skip": "Terminer plus tard",
+    "save": "Enregistrer et continuer",
+    "saving": "Enregistrement...",
+    "warning_incompatible": "Vous avez sélectionné des métiers très différents. Assurez-vous de proposer réellement ces services.",
+    "max_secondary": "Maximum 2 métiers secondaires."
+  },
+  "client_profile": {
+    "title": "Mon profil",
+    "first_name": "Prénom",
+    "last_name": "Nom",
+    "phone": "Téléphone (optionnel)",
+    "phone_privacy": "Votre numéro ne sera jamais partagé.",
+    "phone_hint": "Format : +213XXXXXXXXX",
+    "wilaya": "Wilaya",
+    "save": "Enregistrer",
+    "saved": "Profil mis à jour !",
+    "saving": "Enregistrement..."
   },
   "search": {
     "filter_category": "Catégorie",
@@ -89,7 +131,18 @@
     "title": "Tableau de bord",
     "requests": "Demandes reçues",
     "empty": "Aucune demande reçue pour le moment.",
-    "client_label": "Client"
+    "client_label": "Client",
+    "views_label": "Vues du profil",
+    "views": "{{count}} vue(s)"
+  },
+  "portfolio": {
+    "title": "Photos de réalisations",
+    "upload": "Ajouter une photo",
+    "caption_placeholder": "Description de la réalisation...",
+    "max_reached": "Maximum 6 photos atteint.",
+    "disclaimer": "Photos fournies par le prestataire, non vérifiées par Wasla.",
+    "delete": "Supprimer",
+    "uploading": "Téléversement..."
   },
   "profile_setup": {
     "title": "Configurer mon profil",
@@ -104,6 +157,11 @@
     "saved": "Profil enregistré !",
     "saving": "Enregistrement...",
     "loading": "Chargement...",
-    "min_one_category": "Sélectionnez au moins une spécialité."
+    "min_one_category": "Sélectionnez au moins une spécialité.",
+    "primary_category": "Métier principal",
+    "secondary_categories": "Métiers secondaires (optionnel, max 2)",
+    "warning_incompatible": "Vous avez sélectionné des métiers très différents. Assurez-vous de proposer réellement ces services.",
+    "categories_locked": "Vos métiers sont verrouillés. Contactez le support pour les modifier : support@wasla.dz",
+    "visibility_warning": "Votre profil n'est pas encore visible des clients. Sélectionnez au moins un métier pour apparaître dans les résultats."
   }
 }

@@ -46,10 +46,52 @@
     "electricien": "كهربائي",
     "climaticien": "تقني تكييف",
     "frigoriste": "تقني تبريد",
+    "macon": "بنّاء",
+    "carreleur": "فنّي بلاط",
+    "etancheur": "عازل",
     "peintre": "دهّان",
-    "menuisier": "نجّار",
+    "platrier": "جبّاس",
+    "menuisier": "نجّار خشب",
+    "menuisier_alu": "نجّار ألمنيوم",
     "serrurier": "قفّال",
-    "informaticien": "تقني إعلام آلي"
+    "vitrier": "زجّاج",
+    "cameras": "كاميرات ومراقبة",
+    "alarmes": "إنذار وتحكم في الوصول",
+    "electromenager": "إصلاح أجهزة كهرومنزلية",
+    "panneaux_solaires": "طاقة شمسية",
+    "informaticien": "إعلام آلي وشبكات",
+    "reparation_telephone": "إصلاح هواتف"
+  },
+  "register_step2": {
+    "title_presta": "أكمل ملف العمل",
+    "title_client": "أكمل ملفك الشخصي",
+    "subtitle_presta": "هذه المعلومات ستتيح للعملاء إيجادك.",
+    "subtitle_client": "بعض المعلومات لتخصيص تجربتك.",
+    "display_name": "الاسم المعروض",
+    "first_name": "الاسم",
+    "last_name": "اللقب",
+    "phone_optional": "الهاتف (اختياري)",
+    "phone_hint": "الصيغة: +213XXXXXXXXX",
+    "phone_privacy": "لن يُشارك رقمك دون موافقتك.",
+    "primary_category": "المهنة الرئيسية",
+    "secondary_categories": "مهن ثانوية (اختياري، 2 كحد أقصى)",
+    "skip": "إنهاء لاحقاً",
+    "save": "حفظ ومتابعة",
+    "saving": "جارٍ الحفظ...",
+    "warning_incompatible": "اخترت مهناً مختلفة جداً. تأكد من أنك تقدم هذه الخدمات فعلاً.",
+    "max_secondary": "2 مهن ثانوية كحد أقصى."
+  },
+  "client_profile": {
+    "title": "ملفي الشخصي",
+    "first_name": "الاسم",
+    "last_name": "اللقب",
+    "phone": "الهاتف (اختياري)",
+    "phone_privacy": "لن يُشارك رقمك أبداً.",
+    "phone_hint": "الصيغة: +213XXXXXXXXX",
+    "wilaya": "الولاية",
+    "save": "حفظ",
+    "saved": "تم تحديث الملف!",
+    "saving": "جارٍ الحفظ..."
   },
   "search": {
     "filter_category": "الفئة",
@@ -89,7 +131,18 @@
     "title": "لوحة التحكم",
     "requests": "الطلبات الواردة",
     "empty": "لا توجد طلبات واردة بعد.",
-    "client_label": "عميل"
+    "client_label": "عميل",
+    "views_label": "مشاهدات الملف",
+    "views": "{{count}} مشاهدة"
+  },
+  "portfolio": {
+    "title": "صور الأعمال",
+    "upload": "إضافة صورة",
+    "caption_placeholder": "وصف العمل المنجز...",
+    "max_reached": "وصلت إلى الحد الأقصى (6 صور).",
+    "disclaimer": "صور مقدّمة من المقدِّم، غير موثقة من Wasla.",
+    "delete": "حذف",
+    "uploading": "جارٍ الرفع..."
   },
   "profile_setup": {
     "title": "إعداد ملفي",
@@ -104,6 +157,11 @@
     "saved": "تم حفظ الملف!",
     "saving": "جارٍ الحفظ...",
     "loading": "جارٍ التحميل...",
-    "min_one_category": "اختر تخصصاً واحداً على الأقل."
+    "min_one_category": "اختر تخصصاً واحداً على الأقل.",
+    "primary_category": "المهنة الرئيسية",
+    "secondary_categories": "مهن ثانوية (اختياري، 2 كحد أقصى)",
+    "warning_incompatible": "اخترت مهناً مختلفة جداً. تأكد من أنك تقدم هذه الخدمات فعلاً.",
+    "categories_locked": "مهنك مقفلة. تواصل مع الدعم لتعديلها: support@wasla.dz",
+    "visibility_warning": "ملفك غير مرئي للعملاء بعد. اختر مهنة واحدة على الأقل لتظهر في النتائج."
   }
 }

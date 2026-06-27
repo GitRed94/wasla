@@ -44,12 +44,54 @@
   "categories": {
     "plombier": "Plumber",
     "electricien": "Electrician",
-    "climaticien": "HVAC Technician",
-    "frigoriste": "Refrigeration Tech",
+    "climaticien": "AC Technician",
+    "frigoriste": "Refrigeration Technician",
+    "macon": "Mason",
+    "carreleur": "Tiler",
+    "etancheur": "Waterproofer",
     "peintre": "Painter",
+    "platrier": "Plasterer",
     "menuisier": "Carpenter",
+    "menuisier_alu": "Aluminium Joiner",
     "serrurier": "Locksmith",
-    "informaticien": "IT Technician"
+    "vitrier": "Glazier",
+    "cameras": "CCTV & Surveillance",
+    "alarmes": "Alarms & Access Control",
+    "electromenager": "Appliance Repair",
+    "panneaux_solaires": "Solar Panels",
+    "informaticien": "IT & Networks",
+    "reparation_telephone": "Phone Repair"
+  },
+  "register_step2": {
+    "title_presta": "Complete your prestataire profile",
+    "title_client": "Complete your profile",
+    "subtitle_presta": "This information helps clients find you.",
+    "subtitle_client": "A few details to personalise your experience.",
+    "display_name": "Display name",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "phone_optional": "Phone (optional)",
+    "phone_hint": "Format: +213XXXXXXXXX",
+    "phone_privacy": "Your number will never be shared without your consent.",
+    "primary_category": "Primary trade",
+    "secondary_categories": "Secondary trades (optional, max 2)",
+    "skip": "Finish later",
+    "save": "Save and continue",
+    "saving": "Saving...",
+    "warning_incompatible": "You selected very different trades. Make sure you actually offer all these services.",
+    "max_secondary": "Maximum 2 secondary trades."
+  },
+  "client_profile": {
+    "title": "My profile",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "phone": "Phone (optional)",
+    "phone_privacy": "Your number will never be shared.",
+    "phone_hint": "Format: +213XXXXXXXXX",
+    "wilaya": "Wilaya",
+    "save": "Save",
+    "saved": "Profile updated!",
+    "saving": "Saving..."
   },
   "search": {
     "filter_category": "Category",
@@ -89,7 +131,18 @@
     "title": "Dashboard",
     "requests": "Received requests",
     "empty": "No requests received yet.",
-    "client_label": "Client"
+    "client_label": "Client",
+    "views_label": "Profile views",
+    "views": "{{count}} view(s)"
+  },
+  "portfolio": {
+    "title": "Work photos",
+    "upload": "Add a photo",
+    "caption_placeholder": "Describe this work...",
+    "max_reached": "Maximum 6 photos reached.",
+    "disclaimer": "Photos provided by the service provider, not verified by Wasla.",
+    "delete": "Delete",
+    "uploading": "Uploading..."
   },
   "profile_setup": {
     "title": "Set up my profile",
@@ -104,6 +157,11 @@
     "saved": "Profile saved!",
     "saving": "Saving...",
     "loading": "Loading...",
-    "min_one_category": "Select at least one specialty."
+    "min_one_category": "Select at least one specialty.",
+    "primary_category": "Primary trade",
+    "secondary_categories": "Secondary trades (optional, max 2)",
+    "warning_incompatible": "You selected very different trades. Make sure you actually offer all these services.",
+    "categories_locked": "Your trades are locked. Contact support to change them: support@wasla.dz",
+    "visibility_warning": "Your profile is not yet visible to clients. Select at least one trade to appear in search results."
   }
 }
