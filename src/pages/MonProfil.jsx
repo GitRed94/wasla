@@ -144,12 +144,12 @@ export default function MonProfil() {
 
     if (insertError) { setError(t('errors.generic')); setUploadingPhoto(false); return }
 
-    const { data: refreshed } = await supabase
+    const { data: refreshed, error: refreshError } = await supabase
       .from('portfolio_photos')
       .select('*')
       .eq('prestataire_id', user.id)
       .order('created_at')
-    setPhotos(refreshed ?? [])
+    if (!refreshError) setPhotos(refreshed ?? [])
     setPendingCaption('')
     setUploadingPhoto(false)
     if (fileInputRef.current) fileInputRef.current.value = ''

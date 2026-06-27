@@ -67,7 +67,7 @@ export default function MonProfilClient() {
     }
   }
 
-  if (fetching) return <div className="p-8 text-center text-gray-400">{t('messages.loading')}</div>
+  if (fetching) return <div className="p-8 text-center text-gray-400">{t('profile_setup.loading')}</div>
 
   return (
     <main className="max-w-sm mx-auto px-4 py-8">

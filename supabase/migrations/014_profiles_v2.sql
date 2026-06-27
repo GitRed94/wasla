@@ -14,10 +14,10 @@ alter table public.prestataire_profiles
   add column if not exists phone text;
 
 alter table public.prestataire_profiles
-  add constraint prestataire_phone_unique unique (phone);
+  add constraint if not exists prestataire_phone_unique unique (phone);
 
 alter table public.prestataire_profiles
-  add constraint prestataire_phone_algeria
+  add constraint if not exists prestataire_phone_algeria
     check (phone is null or phone ~ '^\+213[5-7][0-9]{8}$');
 
 -- RPC to safely increment profile views (security definer bypasses RLS)

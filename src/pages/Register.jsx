@@ -233,6 +233,7 @@ export default function Register() {
 
   // ── Step 2 render ──────────────────────────────────────────────
   if (step === 2 && role === 'prestataire') {
+    if (!userId) return null
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
         <div className="w-full max-w-md bg-white rounded-xl shadow-sm p-8">
@@ -363,6 +364,7 @@ export default function Register() {
   }
 
   if (step === 2 && role === 'client') {
+    if (!userId) return null
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
         <div className="w-full max-w-sm bg-white rounded-xl shadow-sm p-8">
