@@ -3,8 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthContext'
+import { CATEGORIES, INCOMPATIBLE_PAIRS } from '../data/categories'
+import { WILAYAS } from '../data/wilayas'
+import SelectField from '../components/ui/SelectField'
 
-const PHONE_REGEX = /^\+\d{7,15}$/
+const PHONE_REGEX = /^\+213[5-7][0-9]{8}$/
+const ALGERIA_PHONE_REGEX = /^\+213[5-7][0-9]{8}$/
 
 const PASSWORD_RULES = [
   { test: v => v.length >= 8,          label: '8 caractères minimum' },
@@ -17,10 +21,18 @@ function passwordValid(v) {
   return PASSWORD_RULES.every(r => r.test(v))
 }
 
+function hasIncompatiblePair(selected) {
+  return INCOMPATIBLE_PAIRS.some(([a, b]) => selected.includes(a) && selected.includes(b))
+}
+
 export default function Register() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { user } = useAuth()
+
+  // Step 1 state
+  const [step, setStep] = useState(1)
+  const [userId, setUserId] = useState('')
   const [role, setRole] = useState('')
   const [tab, setTab] = useState('email')
   const [email, setEmail] = useState('')
@@ -33,9 +45,34 @@ export default function Register() {
   const [loading, setLoading] = useState(false)
   const [roleError, setRoleError] = useState(false)
 
+  // Step 2 — prestataire
+  const [displayName, setDisplayName] = useState('')
+  const [wilaya, setWilaya] = useState('')
+  const [commune, setCommune] = useState('')
+  const [primaryCategory, setPrimaryCategory] = useState('')
+  const [secondaryCategories, setSecondaryCategories] = useState([])
+
+  // Step 2 — client
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [clientWilaya, setClientWilaya] = useState('')
+  const [clientPhone, setClientPhone] = useState('')
+
+  const wilayaOptions = WILAYAS.map(w => ({ value: w, label: w }))
+  const categoryOptions = CATEGORIES.map(c => ({
+    value: c.key,
+    label: `${c.emoji} ${t(`categories.${c.key}`)}`,
+  }))
+  const secondaryCategoryOptions = CATEGORIES.filter(c => c.key !== primaryCategory)
+
+  const allSelected = primaryCategory
+    ? [primaryCategory, ...secondaryCategories]
+    : secondaryCategories
+  const showWarning = allSelected.length > 1 && hasIncompatiblePair(allSelected)
+
   useEffect(() => {
-    if (user) navigate('/')
-  }, [user, navigate])
+    if (user && step === 1) navigate('/')
+  }, [user, step, navigate])
 
   function classifyError(error) {
     const msg = error.message?.toLowerCase() ?? ''
@@ -46,6 +83,16 @@ export default function Register() {
       return 'Trop de tentatives. Réessayez dans quelques minutes.'
     }
     return t('errors.auth_failed')
+  }
+
+  function goToStep2(uid) {
+    setUserId(uid)
+    setStep(2)
+    setError('')
+  }
+
+  function afterStep2(r) {
+    navigate(r === 'prestataire' ? '/mon-profil-presta' : '/')
   }
 
   async function handleEmailRegister(e) {
@@ -69,7 +116,7 @@ export default function Register() {
       } else if (data.user && !data.session) {
         setSuccess('Inscription réussie ! Vérifiez votre email pour activer votre compte, puis connectez-vous.')
       } else {
-        navigate(role === 'prestataire' ? '/mon-profil' : '/')
+        goToStep2(data.user.id)
       }
     } catch {
       setError(t('errors.generic'))
@@ -104,9 +151,13 @@ export default function Register() {
     setError('')
     setLoading(true)
     try {
-      const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' })
-      if (error) setError(classifyError(error))
-      else navigate(role === 'prestataire' ? '/mon-profil' : '/')
+      const { data, error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' })
+      if (error) {
+        setError(classifyError(error))
+      } else {
+        const uid = data?.user?.id ?? (await supabase.auth.getUser()).data.user?.id
+        goToStep2(uid)
+      }
     } catch {
       setError(t('errors.generic'))
     } finally {
@@ -114,6 +165,282 @@ export default function Register() {
     }
   }
 
+  function toggleSecondary(key) {
+    setSecondaryCategories(prev => {
+      if (prev.includes(key)) return prev.filter(k => k !== key)
+      if (prev.length >= 2) return prev
+      return [...prev, key]
+    })
+  }
+
+  async function handleStep2PrestaSubmit(e) {
+    e.preventDefault()
+    if (!displayName.trim()) { setError(t('errors.required')); return }
+    if (!wilaya) { setError(t('errors.required')); return }
+    if (!commune.trim()) { setError(t('errors.required')); return }
+    if (!primaryCategory) { setError(t('errors.required')); return }
+    setError('')
+    setLoading(true)
+    const categories = [primaryCategory, ...secondaryCategories]
+    const { error } = await supabase
+      .from('prestataire_profiles')
+      .upsert({
+        id: userId,
+        display_name: displayName.trim(),
+        wilaya,
+        commune: commune.trim(),
+        primary_category: primaryCategory,
+        categories,
+        is_visible: true,
+      })
+    setLoading(false)
+    if (error) { setError(t('errors.generic')); return }
+    afterStep2('prestataire')
+  }
+
+  async function handleStep2ClientSubmit(e) {
+    e.preventDefault()
+    if (!firstName.trim()) { setError(t('errors.required')); return }
+    if (!lastName.trim()) { setError(t('errors.required')); return }
+    if (!clientWilaya) { setError(t('errors.required')); return }
+    if (clientPhone && !ALGERIA_PHONE_REGEX.test(clientPhone)) {
+      setError(t('errors.invalid_phone')); return
+    }
+    setError('')
+    setLoading(true)
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        wilaya: clientWilaya,
+        contact_phone: clientPhone.trim() || null,
+      })
+      .eq('id', userId)
+    setLoading(false)
+    if (error) { setError(t('errors.generic')); return }
+    afterStep2('client')
+  }
+
+  // ── Step 2 render ──────────────────────────────────────────────
+  if (step === 2 && role === 'prestataire') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-sm p-8">
+          <h1 className="text-xl font-bold text-gray-900 mb-1">{t('register_step2.title_presta')}</h1>
+          <p className="text-sm text-gray-500 mb-6">{t('register_step2.subtitle_presta')}</p>
+
+          {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+
+          <form onSubmit={handleStep2PrestaSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="s2-display-name" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('register_step2.display_name')} *
+              </label>
+              <input
+                id="s2-display-name"
+                type="text"
+                value={displayName}
+                onChange={e => setDisplayName(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t('profile_setup.wilaya')} *
+              </label>
+              <SelectField
+                value={wilaya}
+                onChange={setWilaya}
+                placeholder={t('search.all_wilayas')}
+                options={wilayaOptions}
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="s2-commune" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('profile_setup.commune')} *
+              </label>
+              <input
+                id="s2-commune"
+                type="text"
+                value={commune}
+                onChange={e => setCommune(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t('register_step2.primary_category')} *
+              </label>
+              <SelectField
+                value={primaryCategory}
+                onChange={v => { setPrimaryCategory(v); setSecondaryCategories([]) }}
+                placeholder={t('search.all_categories')}
+                options={categoryOptions}
+                className="w-full"
+              />
+            </div>
+
+            {primaryCategory && (
+              <div>
+                <p className="block text-sm font-medium text-gray-700 mb-2">
+                  {t('register_step2.secondary_categories')}
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {secondaryCategoryOptions.map(cat => {
+                    const isSelected = secondaryCategories.includes(cat.key)
+                    const isDisabled = !isSelected && secondaryCategories.length >= 2
+                    return (
+                      <label
+                        key={cat.key}
+                        className={`flex items-center gap-2 p-2.5 rounded-lg border text-sm transition-colors ${
+                          isSelected
+                            ? 'border-blue-500 bg-blue-50 text-blue-700 cursor-pointer'
+                            : isDisabled
+                            ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
+                            : 'border-gray-200 hover:bg-gray-50 text-gray-700 cursor-pointer'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          disabled={isDisabled}
+                          onChange={() => toggleSecondary(cat.key)}
+                          className="accent-blue-600 shrink-0"
+                        />
+                        <span>{cat.emoji} {t(`categories.${cat.key}`)}</span>
+                      </label>
+                    )
+                  })}
+                </div>
+                {secondaryCategories.length >= 2 && (
+                  <p className="text-xs text-gray-400 mt-1">{t('register_step2.max_secondary')}</p>
+                )}
+              </div>
+            )}
+
+            {showWarning && (
+              <p className="text-amber-600 text-sm bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                ⚠️ {t('register_step2.warning_incompatible')}
+              </p>
+            )}
+
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => afterStep2('prestataire')}
+                className="flex-1 border border-gray-300 text-gray-700 py-2.5 rounded-lg font-medium hover:bg-gray-50"
+              >
+                {t('register_step2.skip')}
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+              >
+                {loading ? t('register_step2.saving') : t('register_step2.save')}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
+  if (step === 2 && role === 'client') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+        <div className="w-full max-w-sm bg-white rounded-xl shadow-sm p-8">
+          <h1 className="text-xl font-bold text-gray-900 mb-1">{t('register_step2.title_client')}</h1>
+          <p className="text-sm text-gray-500 mb-6">{t('register_step2.subtitle_client')}</p>
+
+          {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+
+          <form onSubmit={handleStep2ClientSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="s2-first-name" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('register_step2.first_name')} *
+              </label>
+              <input
+                id="s2-first-name"
+                type="text"
+                value={firstName}
+                onChange={e => setFirstName(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="s2-last-name" className="block text-sm font-medium text-gray-700 mb-1">
+                {t('register_step2.last_name')} *
+              </label>
+              <input
+                id="s2-last-name"
+                type="text"
+                value={lastName}
+                onChange={e => setLastName(e.target.value)}
+                required
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t('client_profile.wilaya')} *
+              </label>
+              <SelectField
+                value={clientWilaya}
+                onChange={setClientWilaya}
+                placeholder={t('search.all_wilayas')}
+                options={wilayaOptions}
+                className="w-full"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t('register_step2.phone_optional')}
+              </label>
+              <input
+                type="tel"
+                placeholder="+213612345678"
+                value={clientPhone}
+                onChange={e => setClientPhone(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p className="text-xs text-gray-400 mt-1">{t('register_step2.phone_privacy')}</p>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => afterStep2('client')}
+                className="flex-1 border border-gray-300 text-gray-700 py-2.5 rounded-lg font-medium hover:bg-gray-50"
+              >
+                {t('register_step2.skip')}
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+              >
+                {loading ? t('register_step2.saving') : t('register_step2.save')}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Step 1: Auth form (unchanged layout) ──────────────────────
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm bg-white rounded-xl shadow-sm p-8">
@@ -208,7 +535,7 @@ export default function Register() {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
             >
-              {loading ? 'Inscription en cours...' : t('auth.submit_register')}
+              {loading ? t('register_step2.saving') : t('auth.submit_register')}
             </button>
           </form>
         )}
@@ -234,7 +561,7 @@ export default function Register() {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
             >
-              {loading ? 'Envoi en cours...' : t('auth.submit_register')}
+              {loading ? t('register_step2.saving') : t('auth.submit_register')}
             </button>
           </form>
         )}
