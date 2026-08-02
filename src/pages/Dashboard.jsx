@@ -37,6 +37,23 @@ export default function Dashboard() {
       setLoading(false)
     }
     fetchData()
+
+    const channel = supabase
+      .channel(`dashboard:${user.id}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'conversations',
+        filter: `prestataire_id=eq.${user.id}`,
+      }, () => fetchData())
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+      }, () => fetchData())
+      .subscribe()
+
+    return () => supabase.removeChannel(channel)
   }, [user.id])
 
   function getLastMsg(msgs) {

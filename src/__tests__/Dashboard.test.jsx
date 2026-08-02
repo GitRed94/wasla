@@ -26,12 +26,19 @@ vi.mock('../supabaseClient', () => {
   const mockProfileEq = vi.fn().mockReturnValue({ single: mockProfileSingle })
   const mockProfileSelect = vi.fn().mockReturnValue({ eq: mockProfileEq })
 
+  const mockSubscribe = vi.fn().mockReturnValue({ unsubscribe: vi.fn() })
+  const mockOn = vi.fn()
+  const mockChannel = vi.fn().mockReturnValue({ on: mockOn, subscribe: mockSubscribe })
+  mockOn.mockReturnValue({ on: mockOn, subscribe: mockSubscribe })
+
   return {
     supabase: {
       from: vi.fn().mockImplementation((table) => {
         if (table === 'prestataire_profiles') return { select: mockProfileSelect }
         return { select: mockConvSelect }
       }),
+      channel: mockChannel,
+      removeChannel: vi.fn(),
     },
   }
 })

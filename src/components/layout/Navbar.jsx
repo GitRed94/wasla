@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
@@ -7,8 +8,10 @@ export default function Navbar() {
   const { t } = useTranslation()
   const { user, profile, signOut } = useAuth()
   const navigate = useNavigate()
+  const [signingOut, setSigningOut] = useState(false)
 
   async function handleSignOut() {
+    setSigningOut(true)
     await signOut()
     navigate('/')
   }
@@ -45,8 +48,15 @@ export default function Navbar() {
             </Link>
             <button
               onClick={handleSignOut}
-              className="text-sm text-gray-700 hover:text-red-600 shrink-0"
+              disabled={signingOut}
+              className="text-sm text-gray-700 hover:text-red-600 shrink-0 disabled:opacity-50 flex items-center gap-1"
             >
+              {signingOut && (
+                <svg className="animate-spin w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+              )}
               {t('nav.logout')}
             </button>
           </>

@@ -6,6 +6,7 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
+  const [prestaProfileComplete, setPrestaProfileComplete] = useState(null)
   const [loading, setLoading] = useState(true)
 
   async function fetchProfile(userId) {
@@ -15,6 +16,17 @@ export function AuthProvider({ children }) {
       .eq('id', userId)
       .single()
     setProfile(data)
+
+    if (data?.role === 'prestataire') {
+      const { data: pp } = await supabase
+        .from('prestataire_profiles')
+        .select('display_name')
+        .eq('id', userId)
+        .single()
+      setPrestaProfileComplete(!!(pp?.display_name))
+    } else {
+      setPrestaProfileComplete(true)
+    }
   }
 
   useEffect(() => {
@@ -22,6 +34,7 @@ export function AuthProvider({ children }) {
       .then(({ data: { session } }) => {
         setUser(session?.user ?? null)
         if (session?.user) fetchProfile(session.user.id)
+        else setPrestaProfileComplete(null)
       })
       .catch(() => {})
       .finally(() => setLoading(false))
@@ -29,7 +42,7 @@ export function AuthProvider({ children }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
       if (session?.user) fetchProfile(session.user.id)
-      else setProfile(null)
+      else { setProfile(null); setPrestaProfileComplete(null) }
     })
 
     return () => subscription.unsubscribe()
@@ -40,7 +53,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signOut }}>
+    <AuthContext.Provider value={{ user, profile, prestaProfileComplete, loading, signOut }}>
       {children}
     </AuthContext.Provider>
   )
