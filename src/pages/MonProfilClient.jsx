@@ -7,6 +7,13 @@ import SelectField from '../components/ui/SelectField'
 
 const ALGERIA_PHONE_REGEX = /^\+213[5-7][0-9]{8}$/
 
+const PASSWORD_RULES = [
+  { test: v => v.length >= 8,          label: '8 caractères minimum' },
+  { test: v => /[A-Z]/.test(v),        label: 'Une majuscule' },
+  { test: v => /[0-9]/.test(v),        label: 'Un chiffre' },
+  { test: v => /[^A-Za-z0-9]/.test(v), label: 'Un caractère spécial' },
+]
+
 export default function MonProfilClient() {
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -19,6 +26,12 @@ export default function MonProfilClient() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  // Password change
+  const [newPassword, setNewPassword] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [passwordSuccess, setPasswordSuccess] = useState(false)
+  const [changingPassword, setChangingPassword] = useState(false)
 
   const wilayaOptions = WILAYAS.map(w => ({ value: w, label: w }))
 
@@ -39,6 +52,25 @@ export default function MonProfilClient() {
     }
     fetchProfile()
   }, [user.id])
+
+  async function handlePasswordChange(e) {
+    e.preventDefault()
+    if (!PASSWORD_RULES.every(r => r.test(newPassword))) {
+      setPasswordError('Le mot de passe ne respecte pas les règles ci-dessous')
+      return
+    }
+    setPasswordError('')
+    setChangingPassword(true)
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    setChangingPassword(false)
+    if (error) {
+      setPasswordError(t('errors.generic'))
+    } else {
+      setPasswordSuccess(true)
+      setNewPassword('')
+      setTimeout(() => setPasswordSuccess(false), 3000)
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -141,6 +173,50 @@ export default function MonProfilClient() {
           {loading ? t('client_profile.saving') : t('client_profile.save')}
         </button>
       </form>
+
+      {/* Account section */}
+      <section className="mt-10 border-t border-gray-100 pt-8">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Compte</h2>
+
+        <div className="mb-5">
+          <p className="text-sm font-medium text-gray-700 mb-1">Adresse email</p>
+          <p className="text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">{user.email ?? user.phone ?? '—'}</p>
+        </div>
+
+        <form onSubmit={handlePasswordChange} className="space-y-3">
+          <div>
+            <label htmlFor="new-password-client" className="block text-sm font-medium text-gray-700 mb-1">
+              Nouveau mot de passe
+            </label>
+            <input
+              id="new-password-client"
+              type="password"
+              value={newPassword}
+              onChange={e => { setNewPassword(e.target.value); setPasswordError('') }}
+              placeholder="Nouveau mot de passe"
+              className="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {newPassword && (
+              <ul className="mt-2 space-y-1">
+                {PASSWORD_RULES.map(r => (
+                  <li key={r.label} className={`text-xs flex items-center gap-1 ${r.test(newPassword) ? 'text-green-600' : 'text-gray-400'}`}>
+                    <span>{r.test(newPassword) ? '✓' : '○'}</span> {r.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {passwordError && <p className="text-red-600 text-sm">{passwordError}</p>}
+          {passwordSuccess && <p className="text-green-600 text-sm font-medium">Mot de passe mis à jour ✓</p>}
+          <button
+            type="submit"
+            disabled={changingPassword || !newPassword}
+            className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-40"
+          >
+            {changingPassword ? 'Mise à jour...' : 'Changer le mot de passe'}
+          </button>
+        </form>
+      </section>
     </main>
   )
 }

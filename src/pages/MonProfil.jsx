@@ -13,14 +13,28 @@ function hasIncompatiblePair(selected) {
   return INCOMPATIBLE_PAIRS.some(([a, b]) => selected.includes(a) && selected.includes(b))
 }
 
+const PASSWORD_RULES = [
+  { test: v => v.length >= 8,          label: '8 caractères minimum' },
+  { test: v => /[A-Z]/.test(v),        label: 'Une majuscule' },
+  { test: v => /[0-9]/.test(v),        label: 'Un chiffre' },
+  { test: v => /[^A-Za-z0-9]/.test(v), label: 'Un caractère spécial' },
+]
+
 export default function MonProfil() {
   const { t } = useTranslation()
   const { user } = useAuth()
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
+  const isNewProfileRef = useRef(false)
 
   const [fetching, setFetching] = useState(true)
   const [categoriesLocked, setCategoriesLocked] = useState(false)
+
+  // Password change
+  const [newPassword, setNewPassword] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [passwordSuccess, setPasswordSuccess] = useState(false)
+  const [changingPassword, setChangingPassword] = useState(false)
 
   // Profile fields
   const [displayName, setDisplayName] = useState('')
@@ -62,6 +76,7 @@ export default function MonProfil() {
 
       if (profileResult.data) {
         const d = profileResult.data
+        if (!d.display_name) isNewProfileRef.current = true
         setDisplayName(d.display_name ?? '')
         setBio(d.bio ?? '')
         setWilaya(d.wilaya ?? '')
@@ -71,6 +86,8 @@ export default function MonProfil() {
         const sec = (d.categories ?? []).filter(k => k !== d.primary_category)
         setSecondaryCategories(sec)
         if (d.categories?.length > 0) setCategoriesLocked(true)
+      } else {
+        isNewProfileRef.current = true
       }
 
       setPhotos(photosResult.data ?? [])
@@ -87,12 +104,38 @@ export default function MonProfil() {
     })
   }
 
+  async function handlePasswordChange(e) {
+    e.preventDefault()
+    if (!PASSWORD_RULES.every(r => r.test(newPassword))) {
+      setPasswordError('Le mot de passe ne respecte pas les règles ci-dessous')
+      return
+    }
+    setPasswordError('')
+    setChangingPassword(true)
+    const { error } = await supabase.auth.updateUser({ password: newPassword })
+    setChangingPassword(false)
+    if (error) {
+      setPasswordError(t('errors.generic'))
+    } else {
+      setPasswordSuccess(true)
+      setNewPassword('')
+      setTimeout(() => setPasswordSuccess(false), 3000)
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     if (!displayName.trim()) { setError(t('errors.required')); return }
     if (!wilaya) { setError(t('errors.required')); return }
     if (!commune.trim()) { setError(t('errors.required')); return }
     if (!primaryCategory) { setError(t('profile_setup.min_one_category')); return }
+    if (yearsExp) {
+      const exp = parseInt(yearsExp, 10)
+      if (isNaN(exp) || exp < 1 || exp > 99) {
+        setError("Années d'expérience doit être entre 1 et 99")
+        return
+      }
+    }
     setError('')
     setLoading(true)
     const categories = [primaryCategory, ...secondaryCategories]
@@ -115,7 +158,12 @@ export default function MonProfil() {
     } else {
       setCategoriesLocked(true)
       setSuccess(true)
-      setTimeout(() => { setSuccess(false); navigate('/dashboard') }, 1500)
+      if (isNewProfileRef.current) {
+        isNewProfileRef.current = false
+        setTimeout(() => { setSuccess(false); navigate('/dashboard') }, 1500)
+      } else {
+        setTimeout(() => setSuccess(false), 2000)
+      }
     }
   }
 
@@ -229,12 +277,14 @@ export default function MonProfil() {
           </label>
           <input
             id="years-exp"
-            type="number"
-            min="1"
-            max="99"
+            type="text"
+            inputMode="numeric"
             value={yearsExp}
-            onChange={e => setYearsExp(e.target.value)}
-            onKeyDown={e => ['e', 'E', '+', '-', '.'].includes(e.key) && e.preventDefault()}
+            onChange={e => {
+              const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 2)
+              setYearsExp(val)
+            }}
+            placeholder="ex: 5"
             className="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -334,6 +384,50 @@ export default function MonProfil() {
           {loading ? t('profile_setup.saving') : t('profile_setup.save')}
         </button>
       </form>
+
+      {/* Account section */}
+      <section className="mt-10 border-t border-gray-100 pt-8">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Compte</h2>
+
+        <div className="mb-5">
+          <p className="text-sm font-medium text-gray-700 mb-1">Adresse email</p>
+          <p className="text-sm text-gray-500 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">{user.email ?? user.phone ?? '—'}</p>
+        </div>
+
+        <form onSubmit={handlePasswordChange} className="space-y-3">
+          <div>
+            <label htmlFor="new-password-presta" className="block text-sm font-medium text-gray-700 mb-1">
+              Nouveau mot de passe
+            </label>
+            <input
+              id="new-password-presta"
+              type="password"
+              value={newPassword}
+              onChange={e => { setNewPassword(e.target.value); setPasswordError('') }}
+              placeholder="Nouveau mot de passe"
+              className="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {newPassword && (
+              <ul className="mt-2 space-y-1">
+                {PASSWORD_RULES.map(r => (
+                  <li key={r.label} className={`text-xs flex items-center gap-1 ${r.test(newPassword) ? 'text-green-600' : 'text-gray-400'}`}>
+                    <span>{r.test(newPassword) ? '✓' : '○'}</span> {r.label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {passwordError && <p className="text-red-600 text-sm">{passwordError}</p>}
+          {passwordSuccess && <p className="text-green-600 text-sm font-medium">Mot de passe mis à jour ✓</p>}
+          <button
+            type="submit"
+            disabled={changingPassword || !newPassword}
+            className="w-full border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 disabled:opacity-40"
+          >
+            {changingPassword ? 'Mise à jour...' : 'Changer le mot de passe'}
+          </button>
+        </form>
+      </section>
 
       {/* Portfolio photos section */}
       <section className="mt-10">

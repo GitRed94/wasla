@@ -2,15 +2,21 @@ import { useState, useRef, useEffect } from 'react'
 
 export default function SelectField({ value, onChange, placeholder, options, className = '' }) {
   const [open, setOpen] = useState(false)
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [search, setSearch] = useState('')
   const ref = useRef(null)
+  const searchRef = useRef(null)
   const listRef = useRef(null)
 
-  const allItems = [{ value: '', label: placeholder }, ...options]
+  const filtered = search.trim()
+    ? options.filter(o => o.label.toLowerCase().startsWith(search.toLowerCase()))
+    : options
 
   useEffect(() => {
     function onClickOutside(e) {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+      if (ref.current && !ref.current.contains(e.target)) {
+        setOpen(false)
+        setSearch('')
+      }
     }
     document.addEventListener('mousedown', onClickOutside)
     return () => document.removeEventListener('mousedown', onClickOutside)
@@ -18,38 +24,42 @@ export default function SelectField({ value, onChange, placeholder, options, cla
 
   useEffect(() => {
     if (open) {
-      const idx = value ? allItems.findIndex(o => o.value === value) : 0
-      setActiveIndex(idx >= 0 ? idx : 0)
+      setTimeout(() => searchRef.current?.focus(), 0)
+    } else {
+      setSearch('')
     }
-  }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open])
 
-  useEffect(() => {
-    if (open && listRef.current) {
-      const items = listRef.current.querySelectorAll('[role="option"]')
-      items[activeIndex]?.focus()
+  function handleSearchKeyDown(e) {
+    if (e.key === 'Escape') { setOpen(false); setSearch('') }
+    if (e.key === 'ArrowDown' && listRef.current) {
+      const first = listRef.current.querySelector('[role="option"]')
+      first?.focus()
     }
-  }, [activeIndex, open])
-
-  function handleButtonKeyDown(e) {
-    if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
-      e.preventDefault()
-      setOpen(true)
+    if (e.key === 'Enter' && filtered.length === 1) {
+      onChange(filtered[0].value)
+      setOpen(false)
+      setSearch('')
     }
   }
 
-  function handleListKeyDown(e) {
-    if (e.key === 'ArrowDown') {
+  function handleItemKeyDown(e, optValue) {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault()
-      setActiveIndex(i => Math.min(i + 1, allItems.length - 1))
+      onChange(optValue)
+      setOpen(false)
+      setSearch('')
+    } else if (e.key === 'Escape') {
+      setOpen(false)
+      setSearch('')
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      const next = e.currentTarget.nextElementSibling
+      next ? next.focus() : searchRef.current?.focus()
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
-      setActiveIndex(i => Math.max(i - 1, 0))
-    } else if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      onChange(allItems[activeIndex]?.value ?? '')
-      setOpen(false)
-    } else if (e.key === 'Escape' || e.key === 'Tab') {
-      setOpen(false)
+      const prev = e.currentTarget.previousElementSibling
+      prev ? prev.focus() : searchRef.current?.focus()
     }
   }
 
@@ -63,7 +73,6 @@ export default function SelectField({ value, onChange, placeholder, options, cla
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen(o => !o)}
-        onKeyDown={handleButtonKeyDown}
         className="w-full flex items-center justify-between gap-2 px-3 py-2.5 bg-white rounded-lg text-sm text-left border border-gray-200"
       >
         <span className={`truncate ${selected ? 'text-gray-800' : 'text-gray-400'}`}>
@@ -78,34 +87,50 @@ export default function SelectField({ value, onChange, placeholder, options, cla
       </button>
 
       {open && (
-        <ul
-          ref={listRef}
-          role="listbox"
-          onKeyDown={handleListKeyDown}
-          className="absolute z-50 left-0 right-0 mt-1 max-h-56 overflow-y-auto bg-white border border-gray-200 rounded-lg shadow-lg"
-        >
-          <li
-            role="option"
-            tabIndex={0}
-            aria-selected={!value}
-            onClick={() => { onChange(''); setOpen(false) }}
-            className={`px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 focus:bg-blue-50 focus:outline-none ${!value ? 'text-blue-600 font-medium' : 'text-gray-400'}`}
-          >
-            {placeholder}
-          </li>
-          {options.map(o => (
-            <li
-              key={o.value}
-              role="option"
-              tabIndex={0}
-              aria-selected={o.value === value}
-              onClick={() => { onChange(o.value); setOpen(false) }}
-              className={`px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 focus:bg-blue-50 focus:outline-none ${o.value === value ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'}`}
-            >
-              {o.label}
-            </li>
-          ))}
-        </ul>
+        <div className="absolute z-50 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
+          <div className="px-2 pt-2 pb-1 border-b border-gray-100">
+            <input
+              ref={searchRef}
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+              placeholder="Rechercher..."
+              className="w-full text-sm px-2 py-1.5 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+          <ul ref={listRef} role="listbox" className="max-h-52 overflow-y-auto py-1">
+            {!search && (
+              <li
+                role="option"
+                tabIndex={0}
+                aria-selected={!value}
+                onClick={() => { onChange(''); setOpen(false); setSearch('') }}
+                onKeyDown={e => handleItemKeyDown(e, '')}
+                className={`px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 focus:bg-blue-50 focus:outline-none ${!value ? 'text-blue-600 font-medium' : 'text-gray-400'}`}
+              >
+                {placeholder}
+              </li>
+            )}
+            {filtered.length === 0 ? (
+              <li className="px-3 py-2 text-sm text-gray-400">Aucun résultat</li>
+            ) : (
+              filtered.map(o => (
+                <li
+                  key={o.value}
+                  role="option"
+                  tabIndex={0}
+                  aria-selected={o.value === value}
+                  onClick={() => { onChange(o.value); setOpen(false); setSearch('') }}
+                  onKeyDown={e => handleItemKeyDown(e, o.value)}
+                  className={`px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 focus:bg-blue-50 focus:outline-none ${o.value === value ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'}`}
+                >
+                  {o.label}
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
       )}
     </div>
   )
