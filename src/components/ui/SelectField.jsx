@@ -104,7 +104,7 @@ export default function SelectField({ value, onChange, placeholder, options, cla
               onChange={e => setSearch(e.target.value)}
               onKeyDown={handleSearchKeyDown}
               placeholder="Rechercher..."
-              className="w-full text-sm px-2 py-1.5 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-sm px-2 py-1.5 bg-white text-gray-800 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
           <ul ref={listRef} role="listbox" className="max-h-52 overflow-y-auto py-1">
