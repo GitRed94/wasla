@@ -74,10 +74,20 @@ export default function MonProfilClient() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!firstName.trim()) { setError(t('errors.required')); return }
-    if (!lastName.trim()) { setError(t('errors.required')); return }
+    if (!firstName.trim()) {
+      setError(t('errors.required'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    if (!lastName.trim()) {
+      setError(t('errors.required'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
     if (phone && !ALGERIA_PHONE_REGEX.test(phone)) {
-      setError(t('errors.invalid_phone')); return
+      setError(t('errors.invalid_phone'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
     }
     setError('')
     setLoading(true)
@@ -93,8 +103,10 @@ export default function MonProfilClient() {
     setLoading(false)
     if (updateError) {
       setError(t('errors.generic'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
       setSuccess(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       setTimeout(() => setSuccess(false), 2000)
     }
   }
@@ -106,7 +118,7 @@ export default function MonProfilClient() {
       <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('client_profile.title')}</h1>
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-      {success && <p className="text-green-600 text-sm mb-4 font-medium">{t('client_profile.saved')}</p>}
+      {success && <p className="text-green-600 text-sm mb-4 font-medium">Changements sauvegardés ✓</p>}
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
@@ -118,7 +130,6 @@ export default function MonProfilClient() {
             type="text"
             value={firstName}
             onChange={e => setFirstName(e.target.value)}
-            required
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -132,7 +143,6 @@ export default function MonProfilClient() {
             type="text"
             value={lastName}
             onChange={e => setLastName(e.target.value)}
-            required
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

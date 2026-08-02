@@ -125,14 +125,31 @@ export default function MonProfil() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!displayName.trim()) { setError(t('errors.required')); return }
-    if (!wilaya) { setError(t('errors.required')); return }
-    if (!commune.trim()) { setError(t('errors.required')); return }
-    if (!primaryCategory) { setError(t('profile_setup.min_one_category')); return }
+    if (!displayName.trim()) {
+      setError(t('errors.required'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    if (!wilaya) {
+      setError(t('errors.required'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    if (!commune.trim()) {
+      setError(t('errors.required'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    if (!primaryCategory) {
+      setError(t('profile_setup.min_one_category'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
     if (yearsExp) {
       const exp = parseInt(yearsExp, 10)
       if (isNaN(exp) || exp < 1 || exp > 99) {
         setError("Années d'expérience doit être entre 1 et 99")
+        window.scrollTo({ top: 0, behavior: 'smooth' })
         return
       }
     }
@@ -155,9 +172,11 @@ export default function MonProfil() {
     setLoading(false)
     if (upsertError) {
       setError(t('errors.generic'))
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
       setCategoriesLocked(true)
       setSuccess(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       if (isNewProfileRef.current) {
         isNewProfileRef.current = false
         setTimeout(() => { setSuccess(false); navigate('/dashboard') }, 1500)
@@ -235,7 +254,7 @@ export default function MonProfil() {
       )}
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-      {success && <p className="text-green-600 text-sm mb-4 font-medium">{t('profile_setup.saved')}</p>}
+      {success && <p className="text-green-600 text-sm mb-4 font-medium">Changements sauvegardés ✓</p>}
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
@@ -247,7 +266,6 @@ export default function MonProfil() {
             type="text"
             value={displayName}
             onChange={e => setDisplayName(e.target.value)}
-            required
             className="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -266,7 +284,6 @@ export default function MonProfil() {
             type="text"
             value={commune}
             onChange={e => setCommune(e.target.value)}
-            required
             className="w-full border border-gray-300 bg-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

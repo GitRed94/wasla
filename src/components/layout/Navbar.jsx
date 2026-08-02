@@ -4,6 +4,15 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import LanguageSwitcher from '../ui/LanguageSwitcher'
 
+function PowerIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
+      <line x1="12" y1="2" x2="12" y2="12" />
+    </svg>
+  )
+}
+
 export default function Navbar() {
   const { t } = useTranslation()
   const { user, profile, signOut } = useAuth()
@@ -26,7 +35,7 @@ export default function Navbar() {
         {t('app_name')}
       </Link>
 
-      <div className="flex items-center gap-2 min-w-0">
+      <div className="flex items-center gap-2 shrink-0">
         <Link to="/search" className="text-gray-700 hover:text-blue-600 shrink-0 flex items-center gap-1">
           <span>🔍</span>
           <span className="hidden sm:inline text-sm">{t('nav.search')}</span>
@@ -53,16 +62,13 @@ export default function Navbar() {
             <button
               onClick={handleSignOut}
               disabled={signingOut}
-              className="text-gray-700 hover:text-red-600 shrink-0 disabled:opacity-50 flex items-center gap-1"
+              title={t('nav.logout')}
+              className="text-gray-500 hover:text-red-600 shrink-0 disabled:opacity-50 flex items-center gap-1"
             >
-              {signingOut ? (
-                <svg className="animate-spin w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-              ) : (
-                <span>🚪</span>
-              )}
+              {signingOut
+                ? <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                : <PowerIcon className="w-4 h-4" />
+              }
               <span className="hidden sm:inline text-sm">{t('nav.logout')}</span>
             </button>
           </>

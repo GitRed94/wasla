@@ -1,4 +1,13 @@
-import { useState, useRef, useEffect } from 'react'
+﻿import { useState, useRef, useEffect } from 'react'
+
+function normalizeText(str) {
+  return str
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+}
 
 export default function SelectField({ value, onChange, placeholder, options, className = '' }) {
   const [open, setOpen] = useState(false)
@@ -8,7 +17,7 @@ export default function SelectField({ value, onChange, placeholder, options, cla
   const listRef = useRef(null)
 
   const filtered = search.trim()
-    ? options.filter(o => o.label.toLowerCase().startsWith(search.toLowerCase()))
+    ? options.filter(o => normalizeText(o.label).startsWith(normalizeText(search)))
     : options
 
   useEffect(() => {
@@ -23,18 +32,13 @@ export default function SelectField({ value, onChange, placeholder, options, cla
   }, [])
 
   useEffect(() => {
-    if (open) {
-      setTimeout(() => searchRef.current?.focus(), 0)
-    } else {
-      setSearch('')
-    }
+    if (!open) setSearch('')
   }, [open])
 
   function handleSearchKeyDown(e) {
     if (e.key === 'Escape') { setOpen(false); setSearch('') }
     if (e.key === 'ArrowDown' && listRef.current) {
-      const first = listRef.current.querySelector('[role="option"]')
-      first?.focus()
+      listRef.current.querySelector('[role="option"]')?.focus()
     }
     if (e.key === 'Enter' && filtered.length === 1) {
       onChange(filtered[0].value)
@@ -91,6 +95,7 @@ export default function SelectField({ value, onChange, placeholder, options, cla
           <div className="px-2 pt-2 pb-1 border-b border-gray-100">
             <input
               ref={searchRef}
+              autoFocus
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -135,3 +140,4 @@ export default function SelectField({ value, onChange, placeholder, options, cla
     </div>
   )
 }
+
