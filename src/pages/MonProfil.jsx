@@ -125,23 +125,8 @@ export default function MonProfil() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!displayName.trim()) {
-      setError(t('errors.required'))
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-      return
-    }
-    if (!wilaya) {
-      setError(t('errors.required'))
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-      return
-    }
-    if (!commune.trim()) {
-      setError(t('errors.required'))
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-      return
-    }
-    if (!primaryCategory) {
-      setError(t('profile_setup.min_one_category'))
+    if (!displayName.trim() || !wilaya || !commune.trim() || !primaryCategory) {
+      setError('Les champs marqués * sont obligatoires')
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }

@@ -2,7 +2,7 @@
 
 function normalizeText(str) {
   return str
-    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[^\p{L}\p{N}\s]/gu, '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
@@ -32,7 +32,11 @@ export default function SelectField({ value, onChange, placeholder, options, cla
   }, [])
 
   useEffect(() => {
-    if (!open) setSearch('')
+    if (open) {
+      requestAnimationFrame(() => searchRef.current?.focus({ preventScroll: true }))
+    } else {
+      setSearch('')
+    }
   }, [open])
 
   function handleSearchKeyDown(e) {
@@ -95,7 +99,6 @@ export default function SelectField({ value, onChange, placeholder, options, cla
           <div className="px-2 pt-2 pb-1 border-b border-gray-100">
             <input
               ref={searchRef}
-              autoFocus
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}

@@ -74,13 +74,8 @@ export default function MonProfilClient() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!firstName.trim()) {
-      setError(t('errors.required'))
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-      return
-    }
-    if (!lastName.trim()) {
-      setError(t('errors.required'))
+    if (!firstName.trim() || !lastName.trim()) {
+      setError('Les champs marqués * sont obligatoires')
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
