@@ -13,6 +13,12 @@ test('CATEGORIES has 19 items each with key, emoji, and cluster', () => {
   })
 })
 
+test('every category has an icon component', () => {
+  CATEGORIES.forEach(cat => {
+    expect(cat.icon).toBeDefined()
+  })
+})
+
 test('CATEGORIES keys are the expected 19 values', () => {
   const keys = CATEGORIES.map(c => c.key)
   expect(keys).toEqual([
