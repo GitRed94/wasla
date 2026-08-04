@@ -176,6 +176,10 @@
     "password_updated": "Password updated ✓",
     "password_rules_not_met": "Password doesn't meet the rules below",
     "password_mismatch": "The two passwords don't match",
-    "current_password_wrong": "Current password is incorrect"
+    "current_password_wrong": "Current password is incorrect",
+    "rule_min_length": "At least 8 characters",
+    "rule_uppercase": "One uppercase letter",
+    "rule_digit": "One number",
+    "rule_special_char": "One special character"
   }
 }

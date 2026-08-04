@@ -176,6 +176,10 @@
     "password_updated": "تم تحديث كلمة المرور ✓",
     "password_rules_not_met": "كلمة المرور لا تستوفي الشروط أدناه",
     "password_mismatch": "كلمتا المرور غير متطابقتين",
-    "current_password_wrong": "كلمة المرور الحالية غير صحيحة"
+    "current_password_wrong": "كلمة المرور الحالية غير صحيحة",
+    "rule_min_length": "8 أحرف على الأقل",
+    "rule_uppercase": "حرف كبير واحد",
+    "rule_digit": "رقم واحد",
+    "rule_special_char": "رمز خاص واحد"
   }
 }

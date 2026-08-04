@@ -4,10 +4,10 @@ import { supabase } from '../../supabaseClient'
 import Button from './Button'
 
 const PASSWORD_RULES = [
-  { test: v => v.length >= 8,          label: '8 caractères minimum' },
-  { test: v => /[A-Z]/.test(v),        label: 'Une majuscule' },
-  { test: v => /[0-9]/.test(v),        label: 'Un chiffre' },
-  { test: v => /[^A-Za-z0-9]/.test(v), label: 'Un caractère spécial' },
+  { test: v => v.length >= 8,          key: 'account.rule_min_length' },
+  { test: v => /[A-Z]/.test(v),        key: 'account.rule_uppercase' },
+  { test: v => /[0-9]/.test(v),        key: 'account.rule_digit' },
+  { test: v => /[^A-Za-z0-9]/.test(v), key: 'account.rule_special_char' },
 ]
 
 export default function PasswordChangeForm({ userEmail }) {
@@ -34,27 +34,31 @@ export default function PasswordChangeForm({ userEmail }) {
     }
 
     setLoading(true)
-    const { error: reauthError } = await supabase.auth.signInWithPassword({
-      email: userEmail,
-      password: currentPassword,
-    })
-    if (reauthError) {
-      setLoading(false)
-      setError(t('account.current_password_wrong'))
-      return
-    }
+    try {
+      const { error: reauthError } = await supabase.auth.signInWithPassword({
+        email: userEmail,
+        password: currentPassword,
+      })
+      if (reauthError) {
+        setError(t('account.current_password_wrong'))
+        return
+      }
 
-    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword })
-    setLoading(false)
-    if (updateError) {
+      const { error: updateError } = await supabase.auth.updateUser({ password: newPassword })
+      if (updateError) {
+        setError(t('errors.generic'))
+        return
+      }
+      setSuccess(true)
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+      setTimeout(() => setSuccess(false), 3000)
+    } catch {
       setError(t('errors.generic'))
-      return
+    } finally {
+      setLoading(false)
     }
-    setSuccess(true)
-    setCurrentPassword('')
-    setNewPassword('')
-    setConfirmPassword('')
-    setTimeout(() => setSuccess(false), 3000)
   }
 
   return (
@@ -86,8 +90,8 @@ export default function PasswordChangeForm({ userEmail }) {
         {newPassword && (
           <ul className="mt-2 space-y-1">
             {PASSWORD_RULES.map(r => (
-              <li key={r.label} className={`text-xs flex items-center gap-1 ${r.test(newPassword) ? 'text-secondary' : 'text-gray-400'}`}>
-                <span>{r.test(newPassword) ? '✓' : '○'}</span> {r.label}
+              <li key={r.key} className={`text-xs flex items-center gap-1 ${r.test(newPassword) ? 'text-secondary' : 'text-gray-400'}`}>
+                <span>{r.test(newPassword) ? '✓' : '○'}</span> {t(r.key)}
               </li>
             ))}
           </ul>

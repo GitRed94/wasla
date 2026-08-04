@@ -176,6 +176,10 @@
     "password_updated": "Mot de passe mis à jour ✓",
     "password_rules_not_met": "Le mot de passe ne respecte pas les règles ci-dessous",
     "password_mismatch": "Les deux mots de passe ne correspondent pas",
-    "current_password_wrong": "Mot de passe actuel incorrect"
+    "current_password_wrong": "Mot de passe actuel incorrect",
+    "rule_min_length": "8 caractères minimum",
+    "rule_uppercase": "Une majuscule",
+    "rule_digit": "Un chiffre",
+    "rule_special_char": "Un caractère spécial"
   }
 }

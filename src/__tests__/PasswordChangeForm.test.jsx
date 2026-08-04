@@ -63,3 +63,14 @@ test('re-authenticates then updates password on success', async () => {
     expect(screen.getByText(/mis à jour/i)).toBeInTheDocument()
   })
 })
+
+test('shows a generic error and stops loading when signInWithPassword rejects', async () => {
+  mockSignIn.mockRejectedValue(new Error('network down'))
+  render(<PasswordChangeForm userEmail="a@b.com" />, { wrapper: Wrapper })
+  fillAndSubmit()
+  await waitFor(() => {
+    expect(screen.getByText(/une erreur est survenue/i)).toBeInTheDocument()
+  })
+  expect(mockUpdateUser).not.toHaveBeenCalled()
+  expect(screen.getByRole('button', { name: /changer le mot de passe/i })).not.toBeDisabled()
+})
