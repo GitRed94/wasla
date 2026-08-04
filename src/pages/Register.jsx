@@ -323,7 +323,7 @@ export default function Register() {
                           checked={isSelected}
                           disabled={isDisabled}
                           onChange={() => toggleSecondary(cat.key)}
-                          className="accent-blue-600 shrink-0"
+                          className="accent-primary shrink-0"
                         />
                         <span className="flex items-center">
                           <cat.icon size={14} className="inline mr-1" />
@@ -462,7 +462,7 @@ export default function Register() {
                 value={r}
                 checked={role === r}
                 onChange={() => { setRole(r); setRoleError(false) }}
-                className="accent-blue-600"
+                className="accent-primary"
               />
               <span className="text-sm">{t(`auth.role_${r}`)}</span>
             </label>

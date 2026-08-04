@@ -104,7 +104,7 @@ export default function SelectField({ value, onChange, placeholder, options, cla
               onChange={e => setSearch(e.target.value)}
               onKeyDown={handleSearchKeyDown}
               placeholder="Rechercher..."
-              className="w-full text-sm px-2 py-1.5 bg-white text-gray-800 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full text-sm px-2 py-1.5 bg-white text-gray-800 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
           <ul ref={listRef} role="listbox" className="max-h-52 overflow-y-auto py-1">
@@ -131,7 +131,7 @@ export default function SelectField({ value, onChange, placeholder, options, cla
                   aria-selected={o.value === value}
                   onClick={() => { onChange(o.value); setOpen(false); setSearch('') }}
                   onKeyDown={e => handleItemKeyDown(e, o.value)}
-                  className={`px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 focus:bg-blue-50 focus:outline-none ${o.value === value ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'}`}
+                  className={`px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 focus:bg-blue-50 focus:outline-none ${o.value === value ? 'bg-blue-50 text-primary font-medium' : 'text-gray-700'}`}
                 >
                   {o.label}
                 </li>

@@ -62,13 +62,13 @@ export default function Dashboard() {
       <p className="text-sm text-gray-500 mb-5">{t('dashboard.requests')}</p>
 
       {views !== null && (
-        <Card className="flex items-center gap-2 mb-5 bg-blue-50 px-4 py-3">
+        <div className="flex items-center gap-2 mb-5 bg-blue-50 rounded-card shadow-sm px-4 py-3">
           <Eye size={22} className="text-primary" />
           <div>
             <p className="text-sm font-medium text-primary">{t('dashboard.views_label')}</p>
             <p className="text-lg font-bold text-text">{t('dashboard.views', { count: views })}</p>
           </div>
-        </Card>
+        </div>
       )}
 
       {conversations.length === 0 ? (

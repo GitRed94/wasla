@@ -24,7 +24,7 @@ function PrestaRedirect({ children }) {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50 overflow-x-hidden pb-16 sm:pb-0">
+    <div className="min-h-screen bg-surface-muted overflow-x-hidden pb-16 sm:pb-0">
       <ScrollToTop />
       <Navbar />
       <Routes>

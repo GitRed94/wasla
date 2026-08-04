@@ -68,7 +68,7 @@ export default function ContactSheet({ open, onClose, prestaireId, prestaireName
             className="flex-1 min-h-0 border border-gray-300 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
           />
           {error && <p className="text-red-600 text-sm shrink-0">{error}</p>}
-          <Button type="submit" disabled={loading || !message.trim()}>
+          <Button type="submit" loading={loading} disabled={loading || !message.trim()}>
             {t('contact.send')}
           </Button>
         </form>
