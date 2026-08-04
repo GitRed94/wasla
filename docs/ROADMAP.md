@@ -29,10 +29,11 @@ This is where "Prestataire Tools" actually landed: registration Step 2 for both 
 ### Round 3 polish (2026-07 → 2026-08-03, no formal plan doc)
 Keyboard nav in SelectField, scroll-to-top, presta profile redirect, years_exp strict validation, form field contrast, logout spinner, dashboard realtime, signingOut reset on login, SelectField search filter, category search fix, validation message fixes, dark-background text-contrast fixes.
 
-### Plan 1F — Design Overhaul 🔄 IN PROGRESS (started 2026-08-04)
-Visual redesign: Uber/Airbnb/Doctolib-style, blue (`#2563EB`) + green (`#10B981`) palette, Inter font, Lucide icons, rounded cards, mobile bottom nav. Profile pages restructured into tabbed ("ribbon") layouts — `/mon-profil-presta` gets 3 tabs (Configurer mon profil / Mon Compte / Photos de réalisations), `/mon-profil-client` gets 2 (Configurer mon profil / Mon Compte). Password-change flow upgraded to 3 fields (current + new + confirm) with re-authentication. No new backend features.
+### Plan 1F — Design Overhaul ✅ DONE (2026-08-04)
+Visual redesign: Uber/Airbnb/Doctolib-style, blue (`#2563EB`) + green (`#10B981`) palette, Inter font, Lucide icons, rounded cards, mobile bottom nav. Profile pages restructured into tabbed ("ribbon") layouts — `/mon-profil-presta` gets 3 tabs (Configurer mon profil / Mon Compte / Photos de réalisations), `/mon-profil-client` gets 2 (Configurer mon profil / Mon Compte). Password-change flow upgraded to 3 fields (current + new + confirm) with re-authentication. Mobile sign-out added to the "Mon Compte" tab (`SignOutButton`) after final review caught it missing. No new backend features.
 Spec: `docs/superpowers/specs/2026-08-04-wasla-design-overhaul-design.md`
 Plan: `docs/superpowers/plans/2026-08-04-wasla-design-overhaul.md`
+Built via 13 tasks (subagent-driven-development) + 1 final-review fix wave, 74 tests passing, pushed to origin/main.
 Explicitly deferred out of 1F: trust badges ("Vérifié", "Intervention rapide", "Disponible aujourd'hui"), WhatsApp/one-click-call buttons, payment method display (BaridiMob/CIB/cash), geolocation, ratings/reviews UI.
 
 ---
