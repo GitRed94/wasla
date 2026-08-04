@@ -77,3 +77,10 @@ test('submit calls profiles update with correct fields', async () => {
     )
   })
 })
+
+test('switches to the account tab and shows the password form', async () => {
+  render(<MonProfilClient />, { wrapper: Wrapper })
+  await waitFor(() => screen.getByRole('tab', { name: /mon compte/i }))
+  fireEvent.click(screen.getByRole('tab', { name: /mon compte/i }))
+  expect(screen.getByLabelText(/mot de passe actuel/i)).toBeInTheDocument()
+})
