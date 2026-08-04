@@ -95,8 +95,9 @@ test('shows portfolio section with upload button', async () => {
   render(<MonProfil />, { wrapper: Wrapper })
   await waitFor(() => {
     expect(screen.getByText(/photos de réalisations/i)).toBeInTheDocument()
-    expect(screen.getByText(/ajouter une photo/i)).toBeInTheDocument()
   })
+  fireEvent.click(screen.getByRole('tab', { name: /photos de réalisations/i }))
+  expect(screen.getByText(/ajouter une photo/i)).toBeInTheDocument()
 })
 
 test('submit calls upsert with primary_category and categories array', async () => {
@@ -125,4 +126,20 @@ test('submit calls upsert with primary_category and categories array', async () 
       })
     )
   })
+})
+
+test('switches to the account tab and shows the password form', async () => {
+  mockSingle.mockResolvedValue({ data: { display_name: 'Ahmed', categories: ['plombier'], primary_category: 'plombier' } })
+  render(<MonProfil />, { wrapper: Wrapper })
+  await waitFor(() => screen.getByRole('tab', { name: /mon compte/i }))
+  fireEvent.click(screen.getByRole('tab', { name: /mon compte/i }))
+  expect(screen.getByLabelText(/mot de passe actuel/i)).toBeInTheDocument()
+})
+
+test('switches to the portfolio tab and shows the upload control', async () => {
+  mockSingle.mockResolvedValue({ data: { display_name: 'Ahmed', categories: ['plombier'], primary_category: 'plombier' } })
+  render(<MonProfil />, { wrapper: Wrapper })
+  await waitFor(() => screen.getByRole('tab', { name: /photos de réalisations/i }))
+  fireEvent.click(screen.getByRole('tab', { name: /photos de réalisations/i }))
+  expect(screen.getByText(/ajouter une photo/i)).toBeInTheDocument()
 })

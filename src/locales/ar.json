@@ -163,7 +163,10 @@
     "warning_incompatible": "اخترت مهناً مختلفة جداً. تأكد من أنك تقدم هذه الخدمات فعلاً.",
     "categories_locked": "مهنك مقفلة. تواصل مع الدعم لتعديلها: support@wasla.dz",
     "visibility_warning": "ملفك غير مرئي للعملاء بعد. اختر مهنة واحدة على الأقل لتظهر في النتائج.",
-    "primary_label": "(رئيسي)"
+    "primary_label": "(رئيسي)",
+    "tab_profile": "إعداد ملفي",
+    "tab_account": "حسابي",
+    "tab_portfolio": "صور الإنجازات"
   },
   "account": {
     "title": "حسابي",
