@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Eye } from 'lucide-react'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthContext'
+import Card from '../components/ui/Card'
 
 function formatTime(iso) {
   if (!iso) return ''
@@ -40,17 +42,8 @@ export default function Dashboard() {
 
     const channel = supabase
       .channel(`dashboard:${user.id}`)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'conversations',
-        filter: `prestataire_id=eq.${user.id}`,
-      }, () => fetchData())
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-      }, () => fetchData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'conversations', filter: `prestataire_id=eq.${user.id}` }, () => fetchData())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, () => fetchData())
       .subscribe()
 
     return () => supabase.removeChannel(channel)
@@ -65,17 +58,17 @@ export default function Dashboard() {
 
   return (
     <main className="max-w-2xl mx-auto px-4 py-6">
-      <h1 className="text-xl font-bold text-gray-900 mb-1">{t('dashboard.title')}</h1>
+      <h1 className="text-xl font-bold text-text mb-1">{t('dashboard.title')}</h1>
       <p className="text-sm text-gray-500 mb-5">{t('dashboard.requests')}</p>
 
       {views !== null && (
-        <div className="flex items-center gap-2 mb-5 bg-blue-50 rounded-xl px-4 py-3">
-          <span className="text-2xl">👁</span>
+        <Card className="flex items-center gap-2 mb-5 bg-blue-50 px-4 py-3">
+          <Eye size={22} className="text-primary" />
           <div>
-            <p className="text-sm font-medium text-blue-800">{t('dashboard.views_label')}</p>
-            <p className="text-lg font-bold text-blue-900">{t('dashboard.views', { count: views })}</p>
+            <p className="text-sm font-medium text-primary">{t('dashboard.views_label')}</p>
+            <p className="text-lg font-bold text-text">{t('dashboard.views', { count: views })}</p>
           </div>
-        </div>
+        </Card>
       )}
 
       {conversations.length === 0 ? (
@@ -86,22 +79,15 @@ export default function Dashboard() {
             const lastMsg = getLastMsg(conv.messages)
             return (
               <li key={conv.id}>
-                <button
-                  onClick={() => navigate(`/messages/${conv.id}`)}
-                  className="w-full flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all text-left"
-                >
-                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center shrink-0 text-lg">
-                    👤
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium text-gray-900 truncate">{t('dashboard.client_label')}</p>
-                    {lastMsg && (
-                      <p className="text-sm text-gray-500 truncate">{lastMsg.content}</p>
-                    )}
-                  </div>
-                  {lastMsg && (
-                    <span className="text-xs text-gray-400 shrink-0">{formatTime(lastMsg.created_at)}</span>
-                  )}
+                <button onClick={() => navigate(`/messages/${conv.id}`)} className="w-full text-left active:scale-95 transition-transform">
+                  <Card className="flex items-center gap-3 p-4 border border-gray-200 hover:border-primary hover:shadow-sm">
+                    <div className="w-10 h-10 rounded-full bg-surface-muted flex items-center justify-center shrink-0 text-lg">👤</div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-text truncate">{t('dashboard.client_label')}</p>
+                      {lastMsg && <p className="text-sm text-gray-500 truncate">{lastMsg.content}</p>}
+                    </div>
+                    {lastMsg && <span className="text-xs text-gray-400 shrink-0">{formatTime(lastMsg.created_at)}</span>}
+                  </Card>
                 </button>
               </li>
             )

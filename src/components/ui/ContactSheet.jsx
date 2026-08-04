@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { X } from 'lucide-react'
 import { supabase } from '../../supabaseClient'
 import { useAuth } from '../../context/AuthContext'
+import Button from './Button'
 
 export default function ContactSheet({ open, onClose, prestaireId, prestaireName }) {
   const { t } = useTranslation()
@@ -29,10 +31,7 @@ export default function ContactSheet({ open, onClose, prestaireId, prestaireName
 
     const { data: conv, error: convErr } = await supabase
       .from('conversations')
-      .upsert(
-        { client_id: user.id, prestataire_id: prestaireId },
-        { onConflict: 'client_id,prestataire_id' }
-      )
+      .upsert({ client_id: user.id, prestataire_id: prestaireId }, { onConflict: 'client_id,prestataire_id' })
       .select('id')
       .single()
 
@@ -53,18 +52,11 @@ export default function ContactSheet({ open, onClose, prestaireId, prestaireName
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
-      <div
-        className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6 flex flex-col"
-        style={{ height: '60vh' }}
-      >
+      <div className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl p-6 flex flex-col" style={{ height: '60vh' }}>
         <div className="flex items-center justify-between mb-4 shrink-0">
-          <p className="font-semibold text-gray-800">{prestaireName}</p>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl font-bold"
-            aria-label="Fermer"
-          >
-            ×
+          <p className="font-semibold text-text">{prestaireName}</p>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600" aria-label="Fermer">
+            <X size={20} />
           </button>
         </div>
 
@@ -73,16 +65,12 @@ export default function ContactSheet({ open, onClose, prestaireId, prestaireName
             value={message}
             onChange={e => setMessage(e.target.value)}
             placeholder={t('contact.placeholder')}
-            className="flex-1 min-h-0 border border-gray-300 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 min-h-0 border border-gray-300 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
           />
           {error && <p className="text-red-600 text-sm shrink-0">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading || !message.trim()}
-            className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 shrink-0"
-          >
+          <Button type="submit" disabled={loading || !message.trim()}>
             {t('contact.send')}
-          </button>
+          </Button>
         </form>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { ArrowLeft } from 'lucide-react'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
@@ -42,12 +43,7 @@ export default function Conversation() {
   useEffect(() => {
     const channel = supabase
       .channel(`conv:${id}`)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-        filter: `conversation_id=eq.${id}`,
-      }, payload => {
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${id}` }, payload => {
         setMessages(prev => {
           if (prev.some(m => m.id === payload.new.id)) return prev
           return [...prev, payload.new]
@@ -69,11 +65,7 @@ export default function Conversation() {
     if (!content || sending) return
     setSending(true)
     setText('')
-    await supabase.from('messages').insert({
-      conversation_id: id,
-      sender_id: user.id,
-      content,
-    })
+    await supabase.from('messages').insert({ conversation_id: id, sender_id: user.id, content })
     setSending(false)
   }
 
@@ -87,21 +79,19 @@ export default function Conversation() {
 
   return (
     <main className="max-w-2xl mx-auto flex flex-col" style={{ height: 'calc(100vh - 57px)' }}>
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 bg-white shrink-0">
-        <button onClick={() => navigate(-1)} className="text-gray-400 hover:text-gray-700 text-lg">←</button>
-        <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm shrink-0">👤</div>
-        <span className="font-medium text-gray-900 truncate">{otherPartyName()}</span>
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 bg-surface shrink-0">
+        <button onClick={() => navigate(-1)} className="text-gray-400 hover:text-gray-700"><ArrowLeft size={18} /></button>
+        <div className="w-8 h-8 rounded-full bg-surface-muted flex items-center justify-center text-sm shrink-0">👤</div>
+        <span className="font-medium text-text truncate">{otherPartyName()}</span>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
         {messages.map(msg => {
           const isMe = msg.sender_id === user.id
           return (
             <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[75%] px-4 py-2 rounded-2xl text-sm ${
-                isMe ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm'
+                isMe ? 'bg-primary text-white rounded-br-sm' : 'bg-surface border border-gray-200 text-text rounded-bl-sm'
               }`}>
                 {msg.content}
               </div>
@@ -111,19 +101,18 @@ export default function Conversation() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
-      <form onSubmit={handleSend} className="flex items-center gap-2 px-4 py-3 border-t border-gray-200 bg-white shrink-0">
+      <form onSubmit={handleSend} className="flex items-center gap-2 px-4 py-3 border-t border-gray-200 bg-surface shrink-0">
         <input
           type="text"
           value={text}
           onChange={e => setText(e.target.value)}
           placeholder={t('messages.type_message')}
-          className="flex-1 min-w-0 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 min-w-0 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button
           type="submit"
           disabled={sending || !text.trim()}
-          className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-700 disabled:opacity-50 shrink-0"
+          className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-primary-dark disabled:opacity-50 shrink-0"
         >
           {t('messages.send')}
         </button>
