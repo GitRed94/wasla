@@ -115,7 +115,7 @@ export default function SelectField({ value, onChange, placeholder, options, cla
                 aria-selected={!value}
                 onClick={() => { onChange(''); setOpen(false); setSearch('') }}
                 onKeyDown={e => handleItemKeyDown(e, '')}
-                className={`px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 focus:bg-blue-50 focus:outline-none ${!value ? 'text-blue-600 font-medium' : 'text-gray-400'}`}
+                className={`px-3 py-2 text-sm cursor-pointer hover:bg-blue-50 focus:bg-blue-50 focus:outline-none ${!value ? 'text-primary font-medium' : 'text-gray-400'}`}
               >
                 {placeholder}
               </li>
