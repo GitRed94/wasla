@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext'
 import { CATEGORIES, INCOMPATIBLE_PAIRS } from '../data/categories'
 import { WILAYAS } from '../data/wilayas'
 import SelectField from '../components/ui/SelectField'
+import Button from '../components/ui/Button'
 
 const PHONE_REGEX = /^\+213[5-7][0-9]{8}$/
 
@@ -60,7 +61,7 @@ export default function Register() {
   const wilayaOptions = WILAYAS.map(w => ({ value: w, label: w }))
   const categoryOptions = CATEGORIES.map(c => ({
     value: c.key,
-    label: `${c.emoji} ${t(`categories.${c.key}`)}`,
+    label: t(`categories.${c.key}`),
   }))
   const secondaryCategoryOptions = CATEGORIES.filter(c => c.key !== primaryCategory)
 
@@ -235,7 +236,7 @@ export default function Register() {
   if (step === 2 && role === 'prestataire') {
     if (!userId) return null
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+      <div className="min-h-screen flex items-center justify-center bg-surface-muted px-4 py-8">
         <div className="w-full max-w-md bg-white rounded-xl shadow-sm p-8">
           <h1 className="text-xl font-bold text-gray-900 mb-1">{t('register_step2.title_presta')}</h1>
           <p className="text-sm text-gray-500 mb-6">{t('register_step2.subtitle_presta')}</p>
@@ -253,7 +254,7 @@ export default function Register() {
                 value={displayName}
                 onChange={e => setDisplayName(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
@@ -280,7 +281,7 @@ export default function Register() {
                 value={commune}
                 onChange={e => setCommune(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
@@ -311,7 +312,7 @@ export default function Register() {
                         key={cat.key}
                         className={`flex items-center gap-2 p-2.5 rounded-lg border text-sm transition-colors ${
                           isSelected
-                            ? 'border-blue-500 bg-blue-50 text-blue-700 cursor-pointer'
+                            ? 'border-primary bg-blue-50 text-primary cursor-pointer'
                             : isDisabled
                             ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
                             : 'border-gray-200 hover:bg-gray-50 text-gray-700 cursor-pointer'
@@ -324,7 +325,10 @@ export default function Register() {
                           onChange={() => toggleSecondary(cat.key)}
                           className="accent-blue-600 shrink-0"
                         />
-                        <span>{cat.emoji} {t(`categories.${cat.key}`)}</span>
+                        <span className="flex items-center">
+                          <cat.icon size={14} className="inline mr-1" />
+                          {t(`categories.${cat.key}`)}
+                        </span>
                       </label>
                     )
                   })}
@@ -342,20 +346,12 @@ export default function Register() {
             )}
 
             <div className="flex gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => afterStep2('prestataire')}
-                className="flex-1 border border-gray-300 text-gray-700 py-2.5 rounded-lg font-medium hover:bg-gray-50"
-              >
+              <Button type="button" variant="secondary" onClick={() => afterStep2('prestataire')}>
                 {t('register_step2.skip')}
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
-              >
+              </Button>
+              <Button type="submit" loading={loading}>
                 {loading ? t('register_step2.saving') : t('register_step2.save')}
-              </button>
+              </Button>
             </div>
           </form>
         </div>
@@ -366,7 +362,7 @@ export default function Register() {
   if (step === 2 && role === 'client') {
     if (!userId) return null
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+      <div className="min-h-screen flex items-center justify-center bg-surface-muted px-4 py-8">
         <div className="w-full max-w-sm bg-white rounded-xl shadow-sm p-8">
           <h1 className="text-xl font-bold text-gray-900 mb-1">{t('register_step2.title_client')}</h1>
           <p className="text-sm text-gray-500 mb-6">{t('register_step2.subtitle_client')}</p>
@@ -384,7 +380,7 @@ export default function Register() {
                 value={firstName}
                 onChange={e => setFirstName(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
@@ -398,7 +394,7 @@ export default function Register() {
                 value={lastName}
                 onChange={e => setLastName(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
@@ -424,26 +420,18 @@ export default function Register() {
                 placeholder="+213612345678"
                 value={clientPhone}
                 onChange={e => setClientPhone(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
               <p className="text-xs text-gray-400 mt-1">{t('register_step2.phone_privacy')}</p>
             </div>
 
             <div className="flex gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => afterStep2('client')}
-                className="flex-1 border border-gray-300 text-gray-700 py-2.5 rounded-lg font-medium hover:bg-gray-50"
-              >
+              <Button type="button" variant="secondary" onClick={() => afterStep2('client')}>
                 {t('register_step2.skip')}
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
-              >
+              </Button>
+              <Button type="submit" loading={loading}>
                 {loading ? t('register_step2.saving') : t('register_step2.save')}
-              </button>
+              </Button>
             </div>
           </form>
         </div>
@@ -453,7 +441,7 @@ export default function Register() {
 
   // ── Step 1: Auth form (unchanged layout) ──────────────────────
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-surface-muted px-4">
       <div className="w-full max-w-sm bg-white rounded-xl shadow-sm p-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('auth.register_title')}</h1>
 
@@ -465,7 +453,7 @@ export default function Register() {
             <label
               key={r}
               className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                role === r ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:bg-gray-50'
+                role === r ? 'border-primary bg-blue-50' : 'border-gray-200 hover:bg-gray-50'
               }`}
             >
               <input
@@ -484,13 +472,13 @@ export default function Register() {
         <div className="flex rounded-lg overflow-hidden border border-gray-200 mb-6">
           <button
             onClick={() => setTab('email')}
-            className={`flex-1 py-2 text-sm font-medium transition-colors ${tab === 'email' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
+            className={`flex-1 py-2 text-sm font-medium transition-colors ${tab === 'email' ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-50'}`}
           >
             {t('auth.email')}
           </button>
           <button
             onClick={() => setTab('phone')}
-            className={`flex-1 py-2 text-sm font-medium transition-colors ${tab === 'phone' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
+            className={`flex-1 py-2 text-sm font-medium transition-colors ${tab === 'phone' ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-50'}`}
           >
             {t('auth.phone')}
           </button>
@@ -511,7 +499,7 @@ export default function Register() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <div>
@@ -524,7 +512,7 @@ export default function Register() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
               <div className="mt-2 space-y-1">
                 {PASSWORD_RULES.map(rule => {
@@ -541,13 +529,9 @@ export default function Register() {
                 })}
               </div>
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
-            >
+            <Button type="submit" loading={loading}>
               {loading ? t('register_step2.saving') : t('auth.submit_register')}
-            </button>
+            </Button>
           </form>
         )}
 
@@ -564,16 +548,12 @@ export default function Register() {
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
-            >
+            <Button type="submit" loading={loading}>
               {loading ? t('register_step2.saving') : t('auth.submit_register')}
-            </button>
+            </Button>
           </form>
         )}
 
@@ -590,22 +570,18 @@ export default function Register() {
                 value={otp}
                 onChange={e => setOtp(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
-            >
+            <Button type="submit" loading={loading}>
               {t('auth.verify')}
-            </button>
+            </Button>
           </form>
         )}
 
         <p className="text-center text-sm text-gray-500 mt-6">
           {t('auth.already_account')}{' '}
-          <Link to="/login" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-primary hover:underline">
             {t('nav.login')}
           </Link>
         </p>

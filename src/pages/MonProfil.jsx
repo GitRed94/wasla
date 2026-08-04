@@ -50,7 +50,7 @@ export default function MonProfil() {
   const wilayaOptions = WILAYAS.map(w => ({ value: w, label: w }))
   const categoryOptions = CATEGORIES.map(c => ({
     value: c.key,
-    label: `${c.emoji} ${t(`categories.${c.key}`)}`,
+    label: t(`categories.${c.key}`),
   }))
   const secondaryCategoryOptions = CATEGORIES.filter(c => c.key !== primaryCategory)
 

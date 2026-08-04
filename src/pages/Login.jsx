@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
 import { useAuth } from '../context/AuthContext'
+import Button from '../components/ui/Button'
 
 const PHONE_REGEX = /^\+\d{7,15}$/
 
@@ -72,20 +73,20 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-surface-muted px-4">
       <div className="w-full max-w-sm bg-white rounded-xl shadow-sm p-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('auth.login_title')}</h1>
 
         <div className="flex rounded-lg overflow-hidden border border-gray-200 mb-6">
           <button
             onClick={() => setTab('email')}
-            className={`flex-1 py-2 text-sm font-medium transition-colors ${tab === 'email' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
+            className={`flex-1 py-2 text-sm font-medium transition-colors ${tab === 'email' ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-50'}`}
           >
             {t('auth.email')}
           </button>
           <button
             onClick={() => setTab('phone')}
-            className={`flex-1 py-2 text-sm font-medium transition-colors ${tab === 'phone' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
+            className={`flex-1 py-2 text-sm font-medium transition-colors ${tab === 'phone' ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-50'}`}
           >
             {t('auth.phone')}
           </button>
@@ -105,7 +106,7 @@ export default function Login() {
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <div>
@@ -118,22 +119,12 @@ export default function Login() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {loading && (
-                <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                </svg>
-              )}
+            <Button type="submit" loading={loading}>
               {loading ? 'Connexion en cours...' : t('auth.submit_login')}
-            </button>
+            </Button>
           </form>
         )}
 
@@ -150,16 +141,12 @@ export default function Login() {
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
-            >
+            <Button type="submit" loading={loading}>
               {t('auth.submit_login')}
-            </button>
+            </Button>
           </form>
         )}
 
@@ -176,22 +163,18 @@ export default function Login() {
                 value={otp}
                 onChange={e => setOtp(e.target.value)}
                 required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
-            >
+            <Button type="submit" loading={loading}>
               {t('auth.verify')}
-            </button>
+            </Button>
           </form>
         )}
 
         <p className="text-center text-sm text-gray-500 mt-6">
           {t('auth.no_account')}{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">
+          <Link to="/register" className="text-primary hover:underline">
             {t('nav.register')}
           </Link>
         </p>

@@ -1,14 +1,12 @@
 import { CATEGORIES, CATEGORY_CLUSTERS, INCOMPATIBLE_PAIRS } from '../data/categories'
 import { WILAYAS } from '../data/wilayas'
 
-test('CATEGORIES has 19 items each with key, emoji, and cluster', () => {
+test('CATEGORIES has 19 items each with key and cluster', () => {
   expect(CATEGORIES).toHaveLength(19)
   CATEGORIES.forEach(cat => {
     expect(cat).toHaveProperty('key')
-    expect(cat).toHaveProperty('emoji')
     expect(cat).toHaveProperty('cluster')
     expect(typeof cat.key).toBe('string')
-    expect(typeof cat.emoji).toBe('string')
     expect(typeof cat.cluster).toBe('string')
   })
 })
