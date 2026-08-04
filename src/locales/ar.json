@@ -164,5 +164,18 @@
     "categories_locked": "مهنك مقفلة. تواصل مع الدعم لتعديلها: support@wasla.dz",
     "visibility_warning": "ملفك غير مرئي للعملاء بعد. اختر مهنة واحدة على الأقل لتظهر في النتائج.",
     "primary_label": "(رئيسي)"
+  },
+  "account": {
+    "title": "حسابي",
+    "email_label": "البريد الإلكتروني",
+    "current_password": "كلمة المرور الحالية",
+    "new_password": "كلمة المرور الجديدة",
+    "confirm_password": "تأكيد كلمة المرور الجديدة",
+    "change_password": "تغيير كلمة المرور",
+    "updating": "جارٍ التحديث...",
+    "password_updated": "تم تحديث كلمة المرور ✓",
+    "password_rules_not_met": "كلمة المرور لا تستوفي الشروط أدناه",
+    "password_mismatch": "كلمتا المرور غير متطابقتين",
+    "current_password_wrong": "كلمة المرور الحالية غير صحيحة"
   }
 }

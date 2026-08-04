@@ -164,5 +164,18 @@
     "categories_locked": "Your trades are locked. Contact support to change them: support@wasla.dz",
     "visibility_warning": "Your profile is not yet visible to clients. Select at least one trade to appear in search results.",
     "primary_label": "(primary)"
+  },
+  "account": {
+    "title": "My Account",
+    "email_label": "Email address",
+    "current_password": "Current password",
+    "new_password": "New password",
+    "confirm_password": "Confirm new password",
+    "change_password": "Change password",
+    "updating": "Updating...",
+    "password_updated": "Password updated ✓",
+    "password_rules_not_met": "Password doesn't meet the rules below",
+    "password_mismatch": "The two passwords don't match",
+    "current_password_wrong": "Current password is incorrect"
   }
 }

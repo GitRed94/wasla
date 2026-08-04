@@ -164,5 +164,18 @@
     "categories_locked": "Vos métiers sont verrouillés. Contactez le support pour les modifier : support@wasla.dz",
     "visibility_warning": "Votre profil n'est pas encore visible des clients. Sélectionnez au moins un métier pour apparaître dans les résultats.",
     "primary_label": "(principal)"
+  },
+  "account": {
+    "title": "Mon Compte",
+    "email_label": "Adresse email",
+    "current_password": "Mot de passe actuel",
+    "new_password": "Nouveau mot de passe",
+    "confirm_password": "Confirmer le nouveau mot de passe",
+    "change_password": "Changer le mot de passe",
+    "updating": "Mise à jour...",
+    "password_updated": "Mot de passe mis à jour ✓",
+    "password_rules_not_met": "Le mot de passe ne respecte pas les règles ci-dessous",
+    "password_mismatch": "Les deux mots de passe ne correspondent pas",
+    "current_password_wrong": "Mot de passe actuel incorrect"
   }
 }
