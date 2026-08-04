@@ -31,8 +31,8 @@ test('renders hero title and subtitle', () => {
 
 test('renders all 19 category cards grouped by cluster', () => {
   render(<Home />, { wrapper: Wrapper })
-  expect(screen.getByText('🔧')).toBeInTheDocument()
-  expect(screen.getByText('⚡')).toBeInTheDocument()
+  expect(screen.getByText('Plombier')).toBeInTheDocument()
+  expect(screen.getByText('Électricien')).toBeInTheDocument()
   expect(screen.getAllByTestId(/^category-card-/)).toHaveLength(19)
 })
 

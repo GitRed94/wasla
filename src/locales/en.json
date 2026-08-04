@@ -37,6 +37,7 @@
     "generic": "Something went wrong"
   },
   "home": {
+    "greeting": "Hello 👋",
     "hero_title": "Find the right professional near you",
     "hero_subtitle": "Plumbers, electricians, painters and more — verified and available.",
     "search_placeholder": "What service are you looking for?"

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { ArrowLeft } from 'lucide-react'
 import { supabase } from '../supabaseClient'
 import { CATEGORIES } from '../data/categories'
 import { WILAYAS } from '../data/wilayas'
 import PrestaCard from '../components/ui/PrestaCard'
 import SelectField from '../components/ui/SelectField'
+import Skeleton from '../components/ui/Skeleton'
 
 export default function Search() {
   const { t } = useTranslation()
@@ -18,7 +20,7 @@ export default function Search() {
   const [loading, setLoading] = useState(true)
   const [fetchError, setFetchError] = useState(null)
 
-  const categoryOptions = CATEGORIES.map(cat => ({ value: cat.key, label: `${cat.emoji} ${t(`categories.${cat.key}`)}` }))
+  const categoryOptions = CATEGORIES.map(cat => ({ value: cat.key, label: t(`categories.${cat.key}`) }))
   const wilayaOptions = WILAYAS.map(w => ({ value: w, label: w }))
 
   useEffect(() => {
@@ -51,14 +53,10 @@ export default function Search() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-6">
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-4"
-      >
-        ← Retour
+      <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-4">
+        <ArrowLeft size={16} /> Retour
       </button>
 
-      {/* Filter bar */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <SelectField
           value={category}
@@ -76,25 +74,17 @@ export default function Search() {
         />
       </div>
 
-      {/* Error banner */}
-      {fetchError && (
-        <p className="text-center text-red-500 py-4 text-sm">{fetchError}</p>
-      )}
+      {fetchError && <p className="text-center text-red-500 py-4 text-sm">{fetchError}</p>}
 
-      {/* Results */}
       {loading ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {[1, 2, 3].map(n => (
-            <div key={n} className="bg-gray-100 rounded-xl h-36 animate-pulse" />
-          ))}
+          {[1, 2, 3].map(n => <Skeleton key={n} className="h-36" />)}
         </div>
       ) : results.length === 0 ? (
         <p className="text-center text-gray-500 py-16">{t('search.no_results')}</p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {results.map(p => (
-            <PrestaCard key={p.id} {...p} />
-          ))}
+          {results.map(p => <PrestaCard key={p.id} {...p} />)}
         </div>
       )}
     </main>

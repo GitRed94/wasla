@@ -282,7 +282,7 @@ export default function MonProfil() {
                     const cat = CATEGORIES.find(c => c.key === key)
                     return (
                       <span key={key} className="text-sm bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
-                        {cat?.emoji} {t(`categories.${key}`)}
+                        {cat?.icon && <cat.icon size={14} className="inline" />} {t(`categories.${key}`)}
                         {key === primaryCategory && <span className="ml-1 text-xs text-primary">{t('profile_setup.primary_label')}</span>}
                       </span>
                     )
@@ -330,7 +330,7 @@ export default function MonProfil() {
                               onChange={() => toggleSecondary(cat.key)}
                               className="accent-primary shrink-0"
                             />
-                            <span>{cat.emoji} {t(`categories.${cat.key}`)}</span>
+                            <span><cat.icon size={14} className="inline" /> {t(`categories.${cat.key}`)}</span>
                           </label>
                         )
                       })}

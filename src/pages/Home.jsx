@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Search as SearchIcon } from 'lucide-react'
 import { CATEGORIES, CATEGORY_CLUSTERS } from '../data/categories'
 import { WILAYAS } from '../data/wilayas'
 import SelectField from '../components/ui/SelectField'
+import Card from '../components/ui/Card'
+import Button from '../components/ui/Button'
 
 export default function Home() {
   const { t } = useTranslation()
@@ -11,7 +14,7 @@ export default function Home() {
   const [category, setCategory] = useState('')
   const [wilaya, setWilaya] = useState('')
 
-  const categoryOptions = CATEGORIES.map(cat => ({ value: cat.key, label: `${cat.emoji} ${t(`categories.${cat.key}`)}` }))
+  const categoryOptions = CATEGORIES.map(cat => ({ value: cat.key, label: t(`categories.${cat.key}`) }))
   const wilayaOptions = WILAYAS.map(w => ({ value: w, label: w }))
 
   function handleSearch(e) {
@@ -28,12 +31,10 @@ export default function Home() {
 
   return (
     <main>
-      {/* Hero */}
-      <section className="bg-blue-600 text-white px-6 py-16 text-center">
-        <h1 className="text-3xl font-bold mb-3">{t('home.hero_title')}</h1>
-        <p className="text-blue-100 mb-8">{t('home.hero_subtitle')}</p>
+      <section className="px-6 py-10 text-center">
+        <p className="text-lg text-text mb-1">{t('home.greeting')}</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-text mb-8">{t('home.hero_title')}</h1>
 
-        {/* Search bar */}
         <form
           role="form"
           onSubmit={handleSearch}
@@ -53,16 +54,12 @@ export default function Home() {
             options={wilayaOptions}
             className="w-full sm:flex-1"
           />
-          <button
-            type="submit"
-            className="px-6 py-2.5 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50"
-          >
-            {t('search.submit')}
-          </button>
+          <Button type="submit" className="sm:w-auto sm:px-6">
+            <SearchIcon size={16} /> {t('search.submit')}
+          </Button>
         </form>
       </section>
 
-      {/* Category clusters */}
       <section className="px-6 py-10 max-w-4xl mx-auto space-y-8">
         {CATEGORY_CLUSTERS.map(cluster => {
           const cats = CATEGORIES.filter(c => c.cluster === cluster.key)
@@ -72,19 +69,24 @@ export default function Home() {
                 {cluster.label}
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {cats.map(cat => (
-                  <button
-                    key={cat.key}
-                    data-testid={`category-card-${cat.key}`}
-                    onClick={() => handleCategoryClick(cat.key)}
-                    className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-400 hover:shadow-sm transition-all"
-                  >
-                    <span className="text-3xl">{cat.emoji}</span>
-                    <span className="text-sm font-medium text-gray-700 text-center leading-tight">
-                      {t(`categories.${cat.key}`)}
-                    </span>
-                  </button>
-                ))}
+                {cats.map(cat => {
+                  const Icon = cat.icon
+                  return (
+                    <button
+                      key={cat.key}
+                      data-testid={`category-card-${cat.key}`}
+                      onClick={() => handleCategoryClick(cat.key)}
+                      className="text-left"
+                    >
+                      <Card className="flex flex-col items-center gap-2 p-4 border border-gray-200 hover:border-primary active:scale-95 transition-all">
+                        <Icon size={28} className="text-primary" />
+                        <span className="text-sm font-medium text-gray-700 text-center leading-tight">
+                          {t(`categories.${cat.key}`)}
+                        </span>
+                      </Card>
+                    </button>
+                  )
+                })}
               </div>
             </div>
           )
