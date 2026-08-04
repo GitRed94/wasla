@@ -78,7 +78,7 @@ export default function Conversation() {
   if (loading) return <div className="p-8 text-center text-gray-400">{t('messages.loading')}</div>
 
   return (
-    <main className="max-w-2xl mx-auto flex flex-col" style={{ height: 'calc(100vh - 57px)' }}>
+    <main className="max-w-2xl mx-auto flex flex-col h-[calc(100vh-121px)] sm:h-[calc(100vh-57px)]">
       <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 bg-surface shrink-0">
         <button onClick={() => navigate(-1)} className="text-gray-400 hover:text-gray-700"><ArrowLeft size={18} /></button>
         <div className="w-8 h-8 rounded-full bg-surface-muted flex items-center justify-center text-sm shrink-0">👤</div>
