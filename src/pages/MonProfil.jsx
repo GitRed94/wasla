@@ -10,6 +10,7 @@ import Tabs from '../components/ui/Tabs'
 import Button from '../components/ui/Button'
 import Card from '../components/ui/Card'
 import PasswordChangeForm from '../components/ui/PasswordChangeForm'
+import SignOutButton from '../components/ui/SignOutButton'
 
 const MAX_PHOTOS = 6
 
@@ -368,13 +369,22 @@ export default function MonProfil() {
       )}
 
       {activeTab === 'account' && (
-        <Card className="p-5">
-          <div className="mb-5">
-            <p className="text-sm font-medium text-gray-700 mb-1">{t('account.email_label')}</p>
-            <p className="text-sm text-gray-500 bg-surface-muted border border-gray-200 rounded-lg px-3 py-2">{user.email ?? user.phone ?? '—'}</p>
-          </div>
-          <PasswordChangeForm userEmail={user.email} />
-        </Card>
+        <>
+          <Card className="p-5">
+            <div className="mb-5">
+              <p className="text-sm font-medium text-gray-700 mb-1">{t('account.email_label')}</p>
+              <p className="text-sm text-gray-500 bg-surface-muted border border-gray-200 rounded-lg px-3 py-2">{user.email ?? user.phone ?? '—'}</p>
+            </div>
+            {user.email
+              ? <PasswordChangeForm userEmail={user.email} />
+              : <p className="text-sm text-gray-500">{t('account.no_email')}</p>
+            }
+          </Card>
+
+          <Card className="p-5 mt-5">
+            <SignOutButton />
+          </Card>
+        </>
       )}
 
       {activeTab === 'portfolio' && (

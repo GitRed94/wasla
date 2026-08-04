@@ -184,6 +184,7 @@
     "rule_min_length": "8 caractères minimum",
     "rule_uppercase": "Une majuscule",
     "rule_digit": "Un chiffre",
-    "rule_special_char": "Un caractère spécial"
+    "rule_special_char": "Un caractère spécial",
+    "no_email": "Le changement de mot de passe n'est pas disponible pour les comptes créés par téléphone."
   }
 }

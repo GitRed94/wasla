@@ -184,6 +184,7 @@
     "rule_min_length": "At least 8 characters",
     "rule_uppercase": "One uppercase letter",
     "rule_digit": "One number",
-    "rule_special_char": "One special character"
+    "rule_special_char": "One special character",
+    "no_email": "Password change isn't available for accounts created by phone."
   }
 }

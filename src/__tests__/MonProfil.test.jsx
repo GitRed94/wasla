@@ -44,8 +44,10 @@ vi.mock('../supabaseClient', () => ({
   },
 }))
 
+const mockSignOut = vi.fn().mockResolvedValue()
+
 vi.mock('../context/AuthContext', () => ({
-  useAuth: () => ({ user: { id: 'user-1' } }),
+  useAuth: () => ({ user: { id: 'user-1', email: 'ali@example.com' }, signOut: mockSignOut }),
 }))
 
 function Wrapper({ children }) {
@@ -134,6 +136,14 @@ test('switches to the account tab and shows the password form', async () => {
   await waitFor(() => screen.getByRole('tab', { name: /mon compte/i }))
   fireEvent.click(screen.getByRole('tab', { name: /mon compte/i }))
   expect(screen.getByLabelText(/mot de passe actuel/i)).toBeInTheDocument()
+})
+
+test('shows a sign-out control on the account tab', async () => {
+  mockSingle.mockResolvedValue({ data: { display_name: 'Ahmed', categories: ['plombier'], primary_category: 'plombier' } })
+  render(<MonProfil />, { wrapper: Wrapper })
+  await waitFor(() => screen.getByRole('tab', { name: /mon compte/i }))
+  fireEvent.click(screen.getByRole('tab', { name: /mon compte/i }))
+  expect(screen.getByRole('button', { name: /déconnexion/i })).toBeInTheDocument()
 })
 
 test('switches to the portfolio tab and shows the upload control', async () => {
